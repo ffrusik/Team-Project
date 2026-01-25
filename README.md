@@ -1,4 +1,4 @@
-Team project created by 2nd year Computer Science students:
+Team project created by 2nd-year Computer Science students:
 
 Ruslan Fefelov (https://github.com/ffrusik)
 
