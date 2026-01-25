@@ -9,6 +9,7 @@
   },
   "author": "",
   "license": "ISC",
+  "type": "module",
   "description": "",
   "dependencies": {
     "express": "^5.2.1"
