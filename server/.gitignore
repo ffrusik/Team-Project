@@ -1,0 +1,6 @@
+node_modules
+.credentials.development.json
+.env
+.vscode
+
+# To access restricted files email on l00189876@atu.ie
