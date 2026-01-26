@@ -1,11 +1,18 @@
+import dotenv from 'dotenv'
+
+dotenv.config()
+
 import express from 'express'
+import cors from 'cors'
+import pool from './db.js'
 
 const app = express()
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT
 
 const routerApi = express.Router()
 
 app.use(express.json())
+app.use(cors())
 
 app.use((req, res, next) => {
     const timestamp = new Date().toISOString()
@@ -15,31 +22,26 @@ app.use((req, res, next) => {
     next()
 })
 
-let rooms = [
-    { id: 1, price: 70, roomNumber: 10 },
-    { id: 2, price: 80, roomNumber: 21 },
-    { id: 3, price: 65, roomNumber: 17 },
-]
-
-routerApi.get('/rooms', (req, res) => {
-    res.json(rooms)
+routerApi.get('/rooms', async (req, res) => {
+    const result = await pool.query('SELECT * FROM rooms')
+    res.json(result.rows)
 })
 
-routerApi.get('/rooms/:id', (req, res) => {
+routerApi.get('/rooms/:id', async (req, res) => {
     const id = Number(req.params.id)
-    const room = rooms.find((room) => room.id === id)
+    const result = await pool.query('SELECT * FROM rooms WHERE id = $1', [id])
 
-    if (!room) return res.status(404).send('Car not found');
+    if (!result) return res.status(404).send('Room not found');
 
     res.json(room)
 })
 
 routerApi.post('/rooms', (req, res) => {
-    res.send('New car')
+    res.send('New room')
 })
 
 app.use('/api', routerApi)
 
-app.listen(5000, () => {
+app.listen(PORT, () => {
     console.log('Server started on port 5000...')
 })
