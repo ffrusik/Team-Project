@@ -1,30 +1,23 @@
-import React, {useEffect, useState} from 'react'
+import { Routes, Route, Link } from "react-router-dom";
+import RoomsPage from "./RoomsPage";
+import BookRoomPage from "./BookRoomPage";
+import BookingsPage from "./BookingsPage";
 
 function App() {
-
-  const [backendData, setBackendData] = useState([{}])
-
-  useEffect(() => {
-    fetch("/api").then(
-      response => response.json()
-    ).then(
-      data => {
-        setBackendData(data)
-      }
-    )
-  }, [])
-
   return (
     <div>
-      {(typeof backendData.users === 'undefined') ? (
-        <p>Loading...</p>
-      ): (
-        backendData.users.map((user, i) => (
-          <p key={i}>{user}</p>
-        ))
-      )}
+      <nav>
+        <Link to="/">Rooms</Link> |{" "}
+        <Link to="/bookings">Bookings</Link>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<RoomsPage />} />
+        <Route path="/book/:id" element={<BookRoomPage />} />
+        <Route path="/bookings" element={<BookingsPage />} />
+      </Routes>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
