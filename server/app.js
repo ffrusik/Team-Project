@@ -13,6 +13,7 @@ const apiRouter = require('./routes/api.js')
 app.use(express.json())
 app.use(cors())
 
+// logging
 app.use((req, res, next) => {
     const timestamp = new Date().toISOString()
 
