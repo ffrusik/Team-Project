@@ -7,9 +7,11 @@ import pool from './db/db.js'
 const app = express()
 const PORT = process.env.PORT
 
+// routers
 const clientRouter = require('./routes/index.js')
 const apiRouter = require('./routes/api.js')
 
+// middleware
 app.use(express.json())
 app.use(cors())
 
@@ -22,8 +24,10 @@ app.use((req, res, next) => {
     next()
 })
 
+// importing routers
 app.use('/', clientRouter, apiRouter)
 
+// starting up the backend
 app.listen(PORT, () => {
     console.log('Server started on port 5000...')
 })
