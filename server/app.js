@@ -22,7 +22,7 @@ app.use((req, res, next) => {
     next()
 })
 
-app.use('/api', clientRouter, apiRouter)
+app.use('/', clientRouter, apiRouter)
 
 app.listen(PORT, () => {
     console.log('Server started on port 5000...')
