@@ -2,14 +2,14 @@ import dotenv from 'dotenv'
 dotenv.config()
 import express from 'express'
 import cors from 'cors'
-import pool from './db/db.js'
+import pool from './db.js'
 
 const app = express()
 const PORT = process.env.PORT
 
 // routers
-const clientRouter = require('./routes/index.js')
-const apiRouter = require('./routes/api.js')
+import clientRouter from './routes/client.js';
+import apiRouter from './routes/api.js';
 
 // middleware
 app.use(express.json())

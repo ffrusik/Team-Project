@@ -1,5 +1,5 @@
 import express from 'express'
-import pool from '../db/db.js'
+import pool from '../db.js'
 
 const router = express.Router()
 
@@ -54,10 +54,10 @@ router.delete('/api/bookings/:id', (req, res) => {
 
 function isAdmin(req, res) {
     if (req.user && req.user.role == 'admin') {
-        return true;
+        return true
     }
-    return false;
+    return false
 }
 
 // export
-module.exports = router
+export default router
