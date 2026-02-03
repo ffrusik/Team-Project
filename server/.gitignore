@@ -1,8 +1,66 @@
-node_modules
-.credentials.development.json
-.env
-.vscode
-
 # To access restricted files email on l00189876@atu.ie
 
+.credentials.development.json
+
 /generated/prisma
+
+
+# Node.js / dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# Environment & secrets
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+.credentials.*
+*.key
+*.pem
+*.secret
+
+# Editor / IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Prisma
+prisma/dev.db*
+prisma/dev.db-shm
+prisma/dev.db-wal
+/generated/prisma/
+node_modules/.prisma/
+
+# Docker / volumes
+docker-compose.override.yml
+postgres_data/
+*.dockerignore
+docker-compose.*.yml
+
+# Logs & temp files
+*.log
+*.tmp
+*.bak
+temp/
+tmp/
+
+# Build / dist
+dist/
+build/
+
+# Testing / coverage
+coverage/
+.nyc_output/
+
+# OS / misc
+*.bak
+*.orig
