@@ -4,3 +4,5 @@ node_modules
 .vscode
 
 # To access restricted files email on l00189876@atu.ie
+
+/generated/prisma
