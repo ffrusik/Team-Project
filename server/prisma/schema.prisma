@@ -15,15 +15,21 @@ datasource db {
 
 model Room {
   id          Int      @id @default(autoincrement())
-  name        String
+  roomNumber  Int
+  roomType    String
+  capacity    Int?
   price       Float    
   isAvailable Boolean 
+  floor       Int?
   description String?  
-  capacity    Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@map("rooms")
+}
+
+model Reservation {
+
 }
 
 // Booking, Users
