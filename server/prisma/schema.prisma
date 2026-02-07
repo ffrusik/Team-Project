@@ -14,22 +14,94 @@ datasource db {
 }
 
 model Room {
-  id          Int      @id @default(autoincrement())
-  roomNumber  Int
-  roomType    String
+  id          Int     @id @default(autoincrement())
+  roomNumber  Int     @unique
   capacity    Int?
-  price       Float    
-  isAvailable Boolean 
-  floor       Int?
-  description String?  
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  price       Float
+  description String?
 
-  @@map("rooms")
+  // for auditing
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reservations Reservation[]
+
+  @@map("room")
 }
 
 model Reservation {
+  id             Int       @id @default(autoincrement())
+  startDate      DateTime
+  endDate        DateTime
+  checkInTime    DateTime?
+  checkOutTime   DateTime?
+  numberOfGuests Int
+  // foreign keys
+  guestId        Int
+  roomId         Int
 
+  // for auditing
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relations
+  room  Room  @relation(fields: [roomId], references: [id], onDelete: Restrict)
+  guest Guest @relation(fields: [guestId], references: [id], onDelete: Cascade)
+
+  extras Extra[]
+
+  @@map("reservation")
 }
 
-// Booking, Users
+model Guest {
+  id          Int     @id @default(autoincrement())
+  guestName   String
+  email       String  @unique
+  phoneNumber String
+  town        String?
+  county      String?
+  eirCode     String
+  // can't store card details under PCI DSS, in the future we may store payment method id
+  // Guest can't be created if he/she didn't pay, so everything should be fine
+
+  // for auditing
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reservations Reservation[]
+
+  @@map("guest")
+}
+
+model ExtraType {
+  id          Int     @id @default(autoincrement())
+  extraName   String  @unique
+  description String?
+  price       Float
+
+  // for auditing
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  extras Extra[]
+
+  @@map("extraType")
+}
+
+model Extra {
+  id            Int      @id @default(autoincrement())
+  dateTime      DateTime
+  quantity      Int
+  extraTypeId   Int
+  reservationId Int
+
+  // for auditing
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // relations
+  reservation Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  extraType   ExtraType   @relation(fields: [extraTypeId], references: [id], onDelete: Restrict)
+
+  @@map("extra")
+}
