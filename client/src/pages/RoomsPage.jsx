@@ -5,7 +5,7 @@ function RoomsPage() {
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
-    fetch("/rooms")
+    fetch("/api/rooms")
       .then(res => res.json())
       .then(setRooms);
   }, []);
@@ -16,8 +16,9 @@ function RoomsPage() {
 
       {rooms.map(room => (
         <div key={room.id}>
-          <h3>{room.name}</h3>
-          <p>€{room.price}</p>
+          <h3>Room number: {room.roomNumber}</h3>
+          <p>Description: €{room.description}</p>
+          <p>Price: €{room.price}</p>
           <Link to={`/book/${room.id}`}>Book</Link>
         </div>
       ))}

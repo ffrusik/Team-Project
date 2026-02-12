@@ -5,14 +5,14 @@ const router = express.Router()
 
 // Get all rooms
 router.get('/api/rooms', async (req, res) => {
-    const result = await pool.query('SELECT * FROM rooms')
-    res.json(result.rows)
+    const result = await pool.query('SELECT * FROM room');
+    res.json(result.rows);
 })
 
 // Get a room by its id
 router.get('/api/rooms/:id', async (req, res) => {
     const id = Number(req.params.id)
-    const result = await pool.query('SELECT * FROM rooms WHERE id = $1', [id])
+    const result = await pool.query('SELECT * FROM room WHERE id = $1', [id])
 
     if (!result) return res.status(404).send('Room not found');
 

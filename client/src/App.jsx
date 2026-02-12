@@ -7,12 +7,12 @@ function App() {
   return (
     <div>
       <nav>
-        <Link to="/">Rooms</Link> |{" "}
-        <Link to="/bookings">Bookings (only visible when admin)</Link>
+        <Link to="/rooms">Rooms</Link> |{" "}
+        <Link to="/bookings">Bookings</Link>
       </nav>
 
       <Routes>
-        <Route path="/" element={<RoomsPage />} />
+        <Route path="/rooms" element={<RoomsPage />} />
         <Route path="/book/:id" element={<BookRoomPage />} />
         <Route path="/bookings" element={<BookingsPage />} />
       </Routes>

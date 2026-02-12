@@ -5,7 +5,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app",
-    "start": "node app"
+    "start": "node app",
+    "db:start": "docker compose up -d",
+    "db:setup": "docker compose up -d && npx prisma migrate dev && npx prisma db seed",
+    "db:reset": "docker compose down -v && docker compose up -d && npx prisma migrate dev && npx prisma db seed"
   },
   "author": "",
   "license": "ISC",
