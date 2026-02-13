@@ -17,9 +17,9 @@ function RoomsPage() {
       {rooms.map(room => (
         <div key={room.id}>
           <h3>Room number: {room.roomNumber}</h3>
-          <p>Description: €{room.description}</p>
+          <p>Description: {room.description}</p>
           <p>Price: €{room.price}</p>
-          <Link to={`/book/${room.id}`}>Book</Link>
+          <Link to={`/book/${room.roomNumber}`}>Book</Link>
         </div>
       ))}
     </div>
