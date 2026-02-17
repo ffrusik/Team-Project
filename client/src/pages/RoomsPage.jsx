@@ -23,6 +23,7 @@ function RoomsPage() {
         </div>
       ))}
     </div>
+    
   );
 }
 
