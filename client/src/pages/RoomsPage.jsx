@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { Link, Routes, Route } from 'react-router-dom';
 
 function RoomsPage() {
   const [rooms, setRooms] = useState([]);
 
   useEffect(() => {
-    fetch("/api/rooms")
+    fetch('/api/rooms')
       .then(res => res.json())
       .then(setRooms);
   }, []);
