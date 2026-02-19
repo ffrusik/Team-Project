@@ -93,8 +93,26 @@ router.post('/api/bookings', async (req, res) => {
 })
 
 // Show all bookings
-router.get('/api/bookings', (req, res) => {
-    res.send('Show all bookings')
+router.get('/api/bookings', async (req, res) => {
+    try {
+        const result = await pool.query(`
+        SELECT 
+            reservation.*, 
+            room."roomNumber"
+        FROM reservation
+        JOIN room 
+            ON reservation."roomId" = room.id
+        `)
+
+        if (result.rows.length === 0) {
+            return res.status(404).send('No bookings found')
+        }
+
+        res.json(result.rows)
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ error: 'Server error' })
+    }
 })
 
 // !(:id) Show a certain booking

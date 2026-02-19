@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, Routes, Route } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 function RoomsPage() {
   const [rooms, setRooms] = useState([]);
