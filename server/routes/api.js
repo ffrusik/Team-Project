@@ -1,5 +1,6 @@
 import express from 'express'
 import pool from '../db.js'
+import bcrypt from 'bcrypt'
 
 const router = express.Router()
 
@@ -11,12 +12,12 @@ router.get('/api/rooms', async (req, res) => {
 
 // Get a room by its id
 router.get('/api/rooms/:id', async (req, res) => {
-    const id = Number(req.params.id)
-    const result = await pool.query('SELECT * FROM room WHERE id = $1', [id])
+    const roomNumber = Number(req.params.id)
+    const result = await pool.query('SELECT * FROM room WHERE "roomNumber" = $1', [roomNumber])
 
     if (!result) return res.status(404).send('Room not found');
 
-    res.json(result.rows)
+    res.json(result.rows[0])
 })
 
 // Add a new room
@@ -25,8 +26,70 @@ router.post('/api/rooms', (req, res) => {
 })
 
 // Add a booking
-router.post('/api/bookings', (req, res) => {
-    res.send('New booking')
+router.post('/api/bookings', async (req, res) => {
+    const {
+        guestName,
+        email,
+        password,
+        repeatPassword,
+        phoneNumber,
+        town,
+        county,
+        eirCode,
+        roomNumber,
+        numberOfGuests,
+        startDate,
+        endDate,
+        emailLogin,
+        passwordLogin
+    } = req.body
+
+    if (emailLogin && passwordLogin) {
+        const userResult = await pool.query(
+            `SELECT * FROM "guest" WHERE email = $1`, [emailLogin]
+        )
+        const user = userResult.rows[0]
+        if (!user) {
+            return res.status(400).json({ error: "Invalid email" })
+        }
+        const isPasswordValid = await bcrypt.compare(passwordLogin, user.password)
+        if (!isPasswordValid) {
+            return res.status(400).json({ error: "Invalid password" })
+        }
+    }
+    if (password !== repeatPassword) {
+        return res.status(400).json({ error: "Passwords do not match" })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    try {
+        const userResult = await pool.query(
+            `INSERT INTO "guest" 
+            ("guestName", "email", "password", "phoneNumber", "town", "county", "eirCode", "createdAt", "updatedAt")
+            VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
+            RETURNING id`,
+            [guestName, email, hashedPassword, phoneNumber, town, county, eirCode]
+        )
+
+        const guestId = userResult.rows[0].id
+
+        const roomId = await pool.query(
+            `SELECT id FROM "room" WHERE "roomNumber" = $1`, [roomNumber]  
+        )
+
+        await pool.query(
+            `INSERT INTO "reservation"
+            ("guestId", "roomId", "startDate", "endDate", "numberOfGuests", "createdAt", "updatedAt")
+            VALUES ($1, $2, $3, $4, $5, NOW(), NOW())`,
+            [guestId, roomId.rows[0].id, startDate, endDate, numberOfGuests]
+        )
+
+        res.json({ message: 'Booking successful' })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ error: 'Server error' })
+    }
 })
 
 // Show all bookings

@@ -57,6 +57,7 @@ model Guest {
   id          Int     @id @default(autoincrement())
   guestName   String
   email       String  @unique
+  password    String
   phoneNumber String
   town        String?
   county      String?
