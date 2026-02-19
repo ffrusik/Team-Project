@@ -12,6 +12,7 @@ function BookRoomPage() {
       .then(setRoom);
   }, [id]);
 
+  // form submission handler
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -33,7 +34,13 @@ function BookRoomPage() {
       })
 
       const result = await response.json()
+
       console.log(result)
+      if (!response.ok) {
+        alert(result.error) // show backend error
+        return
+      }
+      
       alert("Booking successful!")
     } catch (err) {
       console.error(err)
