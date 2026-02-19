@@ -1,6 +1,20 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
+import { Pool } from 'pg';
+import { PrismaPg } from '@prisma/adapter-pg';
 
-const prisma = new PrismaClient()
+import dotenv from 'dotenv';
+dotenv.config();
+
+// Create a connection pool
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
+
+const adapter = new PrismaPg(pool);
+
+const prisma = new PrismaClient({
+  adapter,
+  log: ['query', 'info', 'warn', 'error'],
+});
 
 async function main() {
 
@@ -12,26 +26,21 @@ async function main() {
         description: "Single room with garden view",
         price: 80,
         capacity: 1,
-        createdAt: new Date(),
-        updatedAt: new Date()
       },
       {
         roomNumber: 102,
         description: "Double room with sea view",
         price: 120,
         capacity: 2,
-        createdAt: new Date(),
-        updatedAt: new Date()
       },
       {
         roomNumber: 201,
         description: "Luxury suite",
         price: 250,
         capacity: 4,
-        createdAt: new Date(),
-        updatedAt: new Date()
       }
-    ]
+    ],
+    skipDuplicates: true
   })
 
   console.log("Database seeded successfully")
