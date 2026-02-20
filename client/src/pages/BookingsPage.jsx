@@ -3,7 +3,6 @@
 */
 
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 
 function BookingsPage() {
   const [bookings, setBookings] = useState([]);
@@ -13,6 +12,37 @@ function BookingsPage() {
       .then(res => res.json())
       .then(setBookings);
   }, []);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    const form = e.target
+    const formData = new FormData(form)
+
+    const data = Object.fromEntries(formData.entries())
+
+    try {
+      const response = await fetch(`/api/bookings/${data.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+
+      const result = await response.json()
+
+      console.log(result)
+      if (!response.ok) {
+        alert(result.error) // show backend error
+        return
+      }
+      
+      alert("Deletion successful!")
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   return (
     <div>
@@ -24,6 +54,10 @@ function BookingsPage() {
             <p>Guest id: {booking.guestId}</p>
             <p>Start date: {booking.startDate}</p>
             <p>End date: {booking.endDate}</p>
+            <form onSubmit={handleSubmit}>
+              <input type="hidden" name="id" value={booking.id} />
+              <button type="submit">Delete</button>
+            </form>
         </div>
       ))}
     </div>
