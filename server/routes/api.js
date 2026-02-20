@@ -136,6 +136,20 @@ router.get('/api/bookings', async (req, res) => {
     }
 })
 
+// Delete certain booking
+router.delete('/api/bookings/:id', async (req, res) => {
+    const {
+        id
+    } = req.body
+
+    await pool.query(
+        `DELETE FROM "reservation" WHERE id = $1`,
+        [id]
+    )
+
+    res.json({ message: 'Booking successful' })
+})
+
 // !(:id) Show a certain booking
 router.get('/api/bookings/:id', (req, res) => {
     const id = Number(req.params.id)
@@ -146,12 +160,6 @@ router.get('/api/bookings/:id', (req, res) => {
 router.delete('/api/rooms/:id', (req, res) => {
     const id = Number(req.params.id)
     res.send(`Deleting a room with id ${id}`)
-})
-
-// Delete certain booking
-router.delete('/api/bookings/:id', (req, res) => {
-    const id = Number(req.params.id)
-    res.send(`Deleting a booking with id ${id}`)
 })
 
 function isAdmin(req, res) {
