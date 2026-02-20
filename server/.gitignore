@@ -2,8 +2,6 @@
 
 .credentials.development.json
 
-/generated/prisma
-
 
 # Node.js / dependencies
 node_modules/
