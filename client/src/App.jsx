@@ -2,6 +2,7 @@ import { Routes, Route, Link } from "react-router-dom";
 import RoomsPage from "./pages/RoomsPage.jsx";
 import BookRoomPage from "./pages/BookRoomPage.jsx";
 import BookingsPage from "./pages/BookingsPage.jsx";
+import DashboardPage from "./pages/DashboardMainPage.jsx";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/rooms" element={<RoomsPage />} />
         <Route path="/book/:id" element={<BookRoomPage />} />
         <Route path="/bookings" element={<BookingsPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
       </Routes>
     </div>
   );
