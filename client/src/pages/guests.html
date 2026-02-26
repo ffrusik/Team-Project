@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+
+<head>
+    
+    <title>Guests Management</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Guests Management</h1>
+
+        <!-- Guest Form -->
+        <form id="guestForm">
+            <input type="hidden" id="guestId">
+            <div class="form-group">
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" id="submitGuestBtn">Save Guest</button>
+            </div>
+        </form>
+
+        <!-- Guests Table -->
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="guestTableBody">
+                <button class="edit-btn">Edit</button> <!--needs to be edited -->
+                <button class="delete-btn">Delete</button> <!--needs to be edited -->                
+            </tbody>
+        </table>
+
+        <div class="back-link">
+            <a href="index.html">Home</a>
+        </div>
+    </div>
+</body>
+</html>
