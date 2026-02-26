@@ -7,81 +7,47 @@
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #f5f5f5;
-    padding: 20px;
+    background-color: #f0f0f0;
 }
 
-/* Main container */
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-    background: white;
-    padding: 20px;
-}
 
-/* Headings */
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-h2 {
-    margin-bottom: 15px;
-}
-
-/* Forms */
-form {
+.layout {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
 }
 
-.form-group {
-    flex: 1;
-    min-width: 150px;
-    display: flex;
-    flex-direction: column;
-}
 
-label {
-    font-weight: bold;
-    margin-bottom: 4px;
-}
-
-input, select, button {
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-}
-
-/* Buttons */
-button {
-    background-color: #6b8e23;
+.sidebar {
+    width: 220px;
+    background-color: #2c3e50;
     color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+    min-height: 100vh; /* makes sidebar full height */
+    padding: 20px;
 }
 
-/* Table */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+.sidebar h2 {
+    margin-bottom: 30px;
 }
 
-th, td {
-    border: 1px solid #ccc;
-    padding: 6px;
-    text-align: center;
+.sidebar nav a {
+    display: block;      /* makes the sidebar and main content sit side by side */
+    color: white;
+    text-decoration: none;
+    padding: 10px 0;
+    transition: background 0.2s; /* wiorks with hover transiton */
 }
 
-th {
-    background-color: #eee;
+.sidebar nav a:hover {
+    background-color: #1a2b3c;
+    padding-left: 10px;
 }
 
-/* Back link */
-.back-link {
-    margin-top: 15px;
+
+.main-content {
+    flex: 1;
+    padding: 40px;
+    min-height: 100vh; 
+    background-color: #f0f0f0;
 }
+
+
+
