@@ -43,6 +43,8 @@ async function main() {
     skipDuplicates: true
   })
 
+  // Create extras (to do)
+
   console.log("Database seeded successfully")
 }
 
