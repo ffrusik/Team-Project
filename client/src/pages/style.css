@@ -10,11 +10,9 @@ body {
     background-color: #f0f0f0;
 }
 
-
 .layout {
     display: flex;
 }
-
 
 .sidebar {
     width: 220px;
@@ -41,13 +39,9 @@ body {
     padding-left: 10px;
 }
 
-
 .main-content {
     flex: 1;
     padding: 40px;
     min-height: 100vh; 
     background-color: #f0f0f0;
 }
-
-
-

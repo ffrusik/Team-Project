@@ -3,7 +3,9 @@ import RoomsPage from "./pages/RoomsPage.jsx";
 import BookRoomPage from "./pages/BookRoomPage.jsx";
 import BookingsPage from "./pages/BookingsPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
-import DashhboardRoomsPage from "./pages/DashhboardRoomsPage.jsx";
+import DashboardRoomsPage from "./pages/DashboardRoomsPage.jsx";
+import DashboardGuestsPage from "./pages/DashboardGuestsPage";
+import "./App.css"
 
 function App() {
   return (
@@ -18,7 +20,8 @@ function App() {
         <Route path="/book/:id" element={<BookRoomPage />} />
         <Route path="/bookings" element={<BookingsPage />} />
         <Route path="/admin/dashboard" element={<DashboardPage />} />
-        <Route path="/admin/dashboard/rooms" element={<DashhboardRoomsPage />} />
+        <Route path="/admin/dashboard/rooms" element={<DashboardRoomsPage />} />
+        <Route path="/admin/dashboard/guests" element={<DashboardGuestsPage />} />
       </Routes>
     </div>
   );
