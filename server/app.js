@@ -10,6 +10,7 @@ const PORT = process.env.PORT
 // routers
 import clientRouter from './routes/client.js';
 import apiRouter from './routes/api.js';
+import authRouter from './routes/auth.js'
 
 // middleware
 app.use(express.json())
@@ -25,7 +26,9 @@ app.use((req, res, next) => {
 })
 
 // importing routers
-app.use('/', clientRouter, apiRouter)
+app.use('/', clientRouter)
+app.use('/api', apiRouter)
+app.use('/api/auth', authRouter);
 
 // starting up the backend
 app.listen(PORT, () => {

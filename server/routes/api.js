@@ -5,13 +5,13 @@ import bcrypt from 'bcrypt'
 const router = express.Router()
 
 // Get all rooms
-router.get('/api/rooms', async (req, res) => {
+router.get('/rooms', async (req, res) => {
     const result = await pool.query('SELECT * FROM room');
     res.json(result.rows);
 })
 
 // Get a room by its id
-router.get('/api/rooms/:id', async (req, res) => {
+router.get('/rooms/:id', async (req, res) => {
     const roomNumber = Number(req.params.id)
     const result = await pool.query('SELECT * FROM room WHERE "roomNumber" = $1', [roomNumber])
 
@@ -21,12 +21,12 @@ router.get('/api/rooms/:id', async (req, res) => {
 })
 
 // Add a new room
-router.post('/api/rooms', (req, res) => {
+router.post('/rooms', (req, res) => {
     res.send('New room')
 })
 
 // Add a booking
-router.post('/api/bookings', async (req, res) => {
+router.post('/bookings', async (req, res) => {
     const {
         guestName,
         email,
@@ -113,7 +113,7 @@ router.post('/api/bookings', async (req, res) => {
 })
 
 // Show all bookings
-router.get('/api/bookings', async (req, res) => {
+router.get('/bookings', async (req, res) => {
     try {
         // Join the reservation and room tables to get the room number for each booking
         const result = await pool.query(`
@@ -137,7 +137,7 @@ router.get('/api/bookings', async (req, res) => {
 })
 
 // Delete certain booking
-router.delete('/api/bookings/:id', async (req, res) => {
+router.delete('/bookings/:id', async (req, res) => {
     const {
         id
     } = req.body
@@ -147,17 +147,17 @@ router.delete('/api/bookings/:id', async (req, res) => {
         [id]
     )
 
-    res.json({ message: 'Booking successful' })
+    res.json({ message: 'Booking deleted successfully' })
 })
 
 // !(:id) Show a certain booking
-router.get('/api/bookings/:id', (req, res) => {
+router.get('/bookings/:id', (req, res) => {
     const id = Number(req.params.id)
     res.send(`Some booking with id ${id}`)
 })
 
 // Delete certain room
-router.delete('/api/rooms/:id', (req, res) => {
+router.delete('/rooms/:id', (req, res) => {
     const id = Number(req.params.id)
     res.send(`Deleting a room with id ${id}`)
 })
