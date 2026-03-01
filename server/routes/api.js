@@ -1,23 +1,67 @@
 import express from 'express'
 import pool from '../db.js'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 const router = express.Router()
 
-// Get all rooms
+const JWT_SECRET = process.env.JWT_SECRET
+
+if (!JWT_SECRET) {
+  console.error('JWT_SECRET not set')
+  process.exit(1)
+}
+
+// Middleware: Verify JWT and attach user to req
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: 'Invalid or expired token' });
+    }
+    req.user = user; // { userId, email, role }
+    next();
+  });
+};
+
+// Middleware: Only admins
+const requireAdmin = (req, res, next) => {
+  if (!req.user || req.user.role !== 'ADMIN') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  next();
+};
+
+// Get all available rooms (public)
 router.get('/rooms', async (req, res) => {
-    const result = await pool.query('SELECT * FROM room');
+    const result = await pool.query(`SELECT * FROM room 
+        WHERE id NOT IN (SELECT "roomId" FROM reservation WHERE ("startDate", "endDate") OVERLAPS ($1, $2))`, 
+        [req.query.startDate, req.query.endDate])
     res.json(result.rows);
 })
 
 // Get a room by its id
 router.get('/rooms/:id', async (req, res) => {
     const roomNumber = Number(req.params.id)
-    const result = await pool.query('SELECT * FROM room WHERE "roomNumber" = $1', [roomNumber])
+    
+    try {
+        const result = await pool.query('SELECT * FROM room WHERE "roomNumber" = $1', [roomNumber])
 
-    if (!result) return res.status(404).send('Room not found');
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Room not found' })
+        }
 
-    res.json(result.rows[0])
+        res.json(result.rows[0])
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Server error' })
+    }
 })
 
 // Add a new room
@@ -73,12 +117,12 @@ router.post('/bookings', async (req, res) => {
 
         // Create a new user and booking
         const userResult = await pool.query(
-                `INSERT INTO "guest" 
-                ("guestName", "email", "password", "phoneNumber", "town", "county", "eirCode", "createdAt", "updatedAt")
-                VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
-                RETURNING id`,
-                [guestName, email, hashedPassword, phoneNumber, town, county, eirCode]
-            )
+            `INSERT INTO "guest" 
+            ("guestName", "email", "password", "phoneNumber", "town", "county", "eirCode", "createdAt", "updatedAt")
+            VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
+            RETURNING id`,
+            [guestName, email, hashedPassword, phoneNumber, town, county, eirCode]
+        )
         
 
         guestId = userResult.rows[0].id
@@ -112,27 +156,41 @@ router.post('/bookings', async (req, res) => {
     }
 })
 
-// Show all bookings
-router.get('/bookings', async (req, res) => {
+// Show all of user's bookings (public)
+router.get('/bookings', authenticateToken, async (req, res) => {
     try {
-        // Join the reservation and room tables to get the room number for each booking
-        const result = await pool.query(`
-        SELECT 
-            reservation.*, 
-            room."roomNumber"
-        FROM reservation
-        JOIN room 
-            ON reservation."roomId" = room.id
-        `)
+        if (req.user) {
+            // Join the reservation and room tables to get the room number for each booking
+            const result = await pool.query(`
+            SELECT 
+                reservation.*, 
+                room."roomNumber"
+            FROM reservation
+            JOIN room 
+                ON reservation."roomId" = room.id
+            WHERE reservation."guestId" = $1
+            `, [req.user.userId])
 
-        if (result.rows.length === 0) {
-            return res.status(404).send('No bookings found')
+            res.json({
+                success: true,
+                bookings: result.rows || [],  // always array
+                message: result.rows.length === 0 ? 'No bookings found' : undefined
+            });
         }
-
-        res.json(result.rows)
+        else {
+            res.json({
+                success: false,
+                bookings: [],  // always array
+                message: 'User not authenticated'
+            });
+        }
     } catch (err) {
         console.error(err)
-        res.status(500).json({ error: 'Server error' })
+        res.status(500).json({ 
+            success: false,
+            bookings: [],  // always array  
+            error: 'Server error' 
+        })
     }
 })
 

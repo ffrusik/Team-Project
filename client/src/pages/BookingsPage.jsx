@@ -48,7 +48,7 @@ function BookingsPage() {
     <div>
       <h1>Bookings</h1>
 
-      {bookings.map(booking => (
+      {bookings.success && bookings.bookings.map(booking => (
         <div key={booking.id}>
             <h3>Room number: {booking.roomNumber}</h3>
             <p>Guest id: {booking.guestId}</p>
