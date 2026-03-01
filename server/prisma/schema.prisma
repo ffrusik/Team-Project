@@ -15,11 +15,12 @@ datasource db {
 }
 
 model Room {
-  id          Int     @id @default(autoincrement())
-  roomNumber  Int     @unique
-  capacity    Int?
-  price       Float
-  description String?
+  id           Int     @id @default(autoincrement())
+  roomNumber   Int     @unique
+  capacity     Int?
+  price        Float
+  description  String?
+  availability Boolean @default(true)
 
   // for auditing
   createdAt DateTime @default(now())
@@ -54,6 +55,11 @@ model Reservation {
   @@map("reservation")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model Guest {
   id          Int     @id @default(autoincrement())
   guestName   String
@@ -63,6 +69,7 @@ model Guest {
   town        String?
   county      String?
   eirCode     String
+  role        Role    @default(USER) // USER, ADMIN
   // can't store card details under PCI DSS, in the future we may store payment method id
   // Guest can't be created if he/she didn't pay, so everything should be fine
 
