@@ -15,11 +15,12 @@ datasource db {
 }
 
 model Room {
-  id          Int     @id @default(autoincrement())
-  roomNumber  Int     @unique
-  capacity    Int?
-  price       Float
-  description String?
+  id           Int     @id @default(autoincrement())
+  roomNumber   Int     @unique
+  capacity     Int?
+  price        Float
+  description  String?
+  availability Boolean @default(true)
 
   // for auditing
   createdAt DateTime @default(now())
