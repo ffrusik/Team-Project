@@ -1,79 +1,163 @@
-import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react"
+import { Link } from "react-router-dom"
 
 function DashboardRoomsPage() {
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRooms] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-    fetch('/api/rooms')
-      .then(res => res.json())
-      .then(setRooms);
-  }, []);
+    fetchRooms()
+  }, [])
+
+  const fetchRooms = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) throw new Error('Not logged in')
+
+      const res = await fetch('/api/admin/rooms', {  // <- use admin endpoint if protected
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error || 'Failed to load rooms')
+      }
+
+      const data = await res.json()
+      setRooms(data)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleDelete = async (roomId) => {
+    if (!window.confirm('Are you sure you want to delete this room? This cannot be undone.')) {
+      return
+    }
+
+    try {
+      const token = localStorage.getItem('token')
+      if (!token) throw new Error('Not logged in')
+
+      const res = await fetch(`/api/admin/rooms/${roomId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error || 'Failed to delete room')
+      }
+
+      // Remove from UI immediately
+      setRooms(rooms.filter(room => room.id !== roomId))
+      alert('Room deleted successfully')
+    } catch (err) {
+      alert('Error: ' + err.message)
+    }
+  }
+
+  const handleEdit = (room) => {
+    // TODO: open edit form/modal
+    alert(`Edit room ${room.roomNumber} (not implemented yet)`)
+  }
+
+  if (loading) return <div style={{ padding: '50px', textAlign: 'center' }}>Loading rooms...</div>
+  if (error) return <div style={{ padding: '50px', color: 'red', textAlign: 'center' }}>Error: {error}</div>
 
   return (
     <div className="container">
-        <h1>Rooms Management</h1>
+      <h1>Rooms Management</h1>
 
-        <form id="roomForm">
-            <input type="hidden" id="roomId" />
-            <div className="form-group">
-                <label htmlFor="roomNumber">Room Number</label>
-                <input type="text" id="roomNumber" required />
-            </div>
-            <div className="form-group">
-                <label htmlFor="roomType">Room Type</label>
-                <input type="text" id="roomType" required />
-            </div>
-            <div className="form-group">
-                <label htmlFor="price">Price</label>
-                <input type="number" id="price" required />
-            </div>
-            <div className="form-group">
-                <label htmlFor="availability">Availability</label>
-                <select id="availability">
-                    <option value="available">Available</option>
-                    <option value="unavailable">Unavailable</option>
-                </select>
-            </div>
-            <div className="form-group">
-                <button type="submit" id="submitRoomBtn">Save Room</button>
-            </div>
-        </form>
-
-        {/* Rooms Table */}
-        <table>
-            <thead>
-                <tr>
-                    <th>Room Number</th>
-                    <th>Type</th>
-                    <th>Price</th>
-                    <th>Availability</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="roomTableBody">
-                {rooms.map(room => (
-                    <div key={room.id}>
-                        <th>{room.roomNumber}</th>
-                        <th>{room.roomType}</th>
-                        <th>€{room.price}</th>
-                        <th>{room.availability}</th>
-                        <th>
-                            <Link to={`/book/${room.roomNumber}`}>Book</Link>
-                            <button className="edit-btn">Edit</button>
-                            <button className="delete-btn">Delete</button>
-                        </th>
-                    </div>
-                ))}
-            </tbody>
-        </table>
-
-        <div className="back-link">
-            <Link to="/admin/dashboard/" className="btn">Back</Link>
+    <form id="guestForm">
+        <input type="hidden" id="guestId" />
+        <div className="form-group">
+            <label htmlFor="roomNumber">Room number</label>
+            <input type="number" id="roomNumber" required />
         </div>
+        <div className="form-group">
+            <label htmlFor="description">Description</label>
+            <input type="text" id="description" required />
+        </div>
+        <div className="form-group">
+            <label htmlFor="capacity">Capacity</label>
+            <input type="number" id="capacity" required />
+        </div>
+        <div className="form-group">
+            <label htmlFor="price">Price</label>
+            <input type="number" id="price" required />
+        </div>
+        <div className="form-group">
+            <label htmlFor="availability">Availability</label>
+            <input type="checkbox" id="availability" required />
+        </div>
+        <div className="form-group">
+            <button type="submit" id="submitRoomBtn">Save Room</button>
+        </div>
+    </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Room Number</th>
+            <th>Description</th>
+            <th>Capacity</th>
+            <th>Price</th>
+            <th>Availability</th>
+            <th>Updated at</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rooms.length === 0 ? (
+            <tr>
+              <td colSpan="8" style={{ textAlign: 'center', padding: '40px' }}>
+                No rooms found
+              </td>
+            </tr>
+          ) : (
+            rooms.map(room => (
+              <tr key={room.id}>
+                <td>{room.id}</td>
+                <td>{room.roomNumber}</td>
+                <td>{room.description || '-'}</td>
+                <td>{room.capacity || '-'}</td>
+                <td>€{room.price || '0'}</td>
+                <td>{room.availability ? '✓ Available' : '✗ Unavailable'}</td>
+                <td>{room.updatedAt ? new Date(room.updatedAt).toLocaleString() : '-'}</td>
+                <td>
+                  <button 
+                    className="edit-btn" 
+                    onClick={() => handleEdit(room)}
+                  >
+                    Edit
+                  </button>
+                  <button 
+                    className="delete-btn" 
+                    onClick={() => handleDelete(room.id)}
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+
+      <div className="back-link">
+        <Link to="/admin/dashboard/" className="btn">Back</Link>
+      </div>
     </div>
-    
-  );
+  )
 }
 
-export default DashboardRoomsPage;
+export default DashboardRoomsPage

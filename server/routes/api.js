@@ -152,10 +152,10 @@ router.get('/bookings', authenticateToken, async (req, res) => {
 })
 
 // Delete certain booking
-router.delete('/bookings/:id', requireAdmin, async (req, res) => {
+router.delete('/bookings/:id', authenticateToken, requireAdmin, async (req, res) => {
     const {
         id
-    } = req.body
+    } = req.params
 
     await pool.query(
         `DELETE FROM "reservation" WHERE id = $1`,
@@ -187,20 +187,34 @@ router.get('/bookings/:id', authenticateToken, async (req, res) => {
 })
 
 // Delete a certain room
-router.delete('/rooms/:id', requireAdmin, async (req, res) => {
-    const id = Number(req.params.id)
+router.delete('/admin/rooms/:id', authenticateToken, requireAdmin, async (req, res) => {
+  const { id } = req.params
 
-    try {
-        await pool.query(
-            `DELETE FROM "room" WHERE id = $1`,
-            [id]
-        )
+  try {
+    const result = await pool.query(
+      'DELETE FROM room WHERE id = $1 RETURNING id',
+      [id]
+    )
 
-        res.json({ message: 'Room deleted successfully' })
-    } catch (err) {
-        console.error(err)
-        res.status(500).json({ error: 'Server error' })
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Room not found' })
     }
+
+    res.json({ message: 'Room deleted successfully' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to delete room' })
+  }
+})
+
+router.get('/admin/rooms', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM room')
+    res.json(result.rows || []) // always array
+  } catch (err) {
+    console.error(err)
+    res.status(500).json([])
+  }
 })
 
 // export

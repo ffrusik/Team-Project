@@ -52,12 +52,8 @@ function BookingsPage() {
         <div key={booking.id}>
             <h3>Room number: {booking.roomNumber}</h3>
             <p>Guest id: {booking.guestId}</p>
-            <p>Start date: {booking.startDate}</p>
-            <p>End date: {booking.endDate}</p>
-            <form onSubmit={handleSubmit}>
-              <input type="hidden" name="id" value={booking.id} />
-              <button type="submit">Delete</button>
-            </form>
+            <p>Start date: {new Date(booking.startDate).toLocaleDateString()}</p>
+            <p>End date: {new Date(booking.endDate).toLocaleDateString()}</p>
         </div>
       ))}
     </div>
