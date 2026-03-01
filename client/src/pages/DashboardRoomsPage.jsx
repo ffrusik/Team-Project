@@ -6,9 +6,26 @@ function DashboardRoomsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
+  const [editingRoom, setEditingRoom] = useState(null);
+  const [formData, setFormData] = useState({
+    roomNumber: '',
+    description: '',
+    capacity: '',
+    price: '',
+    availability: true,
+  });
+
   useEffect(() => {
     fetchRooms()
   }, [])
+
+  const handleFormChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
+    }));
+  };
 
   const fetchRooms = async () => {
     try {
@@ -76,15 +93,15 @@ function DashboardRoomsPage() {
     <div className="container">
       <h1>Rooms Management</h1>
 
-    <form id="guestForm">
-        <input type="hidden" id="guestId" />
+    <form id="roomForm">
+        <input type="hidden" id="roomNumber" />
         <div className="form-group">
             <label htmlFor="roomNumber">Room number</label>
             <input type="number" id="roomNumber" required />
         </div>
         <div className="form-group">
             <label htmlFor="description">Description</label>
-            <input type="text" id="description" required />
+            <input type="text" id="description" />
         </div>
         <div className="form-group">
             <label htmlFor="capacity">Capacity</label>
@@ -95,8 +112,22 @@ function DashboardRoomsPage() {
             <input type="number" id="price" required />
         </div>
         <div className="form-group">
-            <label htmlFor="availability">Availability</label>
-            <input type="checkbox" id="availability" required />
+            <label htmlFor="availability" className="checkbox-label">
+                <span>Available</span>
+                <input 
+                    type="checkbox" 
+                    id="availability" 
+                    name="availability" 
+                    checked={formData.availability}
+                    onChange={handleFormChange}
+                    required 
+                    style={{
+                        width: '20px',
+                        height: '20px',
+                        accentColor: '#28a745',
+                        cursor: 'pointer'
+                    }}/>
+            </label>
         </div>
         <div className="form-group">
             <button type="submit" id="submitRoomBtn">Save Room</button>

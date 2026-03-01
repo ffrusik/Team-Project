@@ -47,6 +47,18 @@ form {
   font-size: 16px;
 }
 
+input[type="checkbox"] {
+  accent-color: #28a745; /* green check */
+  cursor: pointer;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
 button,
 .btn {
   padding: 10px 20px;

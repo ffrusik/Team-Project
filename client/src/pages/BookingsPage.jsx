@@ -13,37 +13,6 @@ function BookingsPage() {
       .then(setBookings);
   }, []);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    const form = e.target
-    const formData = new FormData(form)
-
-    const data = Object.fromEntries(formData.entries())
-
-    try {
-      const response = await fetch(`/api/bookings/${data.id}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-
-      const result = await response.json()
-
-      console.log(result)
-      if (!response.ok) {
-        alert(result.error) // show backend error
-        return
-      }
-      
-      alert("Deletion successful!")
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
   return (
     <div>
       <h1>Bookings</h1>
