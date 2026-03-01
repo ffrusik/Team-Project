@@ -52,34 +52,6 @@ function BookRoomPage() {
     <div>
       <h1>Book Room #{id}</h1>
       <form onSubmit={handleSubmit}>
-        <p>New here?</p>
-        <div className='userInputDiv'>
-          <label htmlFor='guestNameInput'>Full name: </label>
-          <input type='text' id='guestNameInput' name='guestName' ></input><br></br>
-          <label htmlFor='emailInput'>Email: </label>
-          <input type='text' id='emailInput' name='email'></input><br></br>
-          <label htmlFor='emailInput'>Password: </label>
-          <input type='password' id='passwordInput' name='password'></input><br></br>
-          <label htmlFor='emailInput'>Repeat password: </label>
-          <input type='password' id='repeatPasswordInput' name='repeatPassword'></input><br></br>
-          <label htmlFor='phoneNumberInput'>Phone number: </label>
-          <input type='text' id='phoneNumberInput' name='phoneNumber'></input><br></br>
-          <label htmlFor='townInput'>Town: </label>
-          <input type='text' id='townInput' name='town' ></input><br></br>
-          <label htmlFor='countyInput'>County: </label>
-          <input type='text' id='countyInput' name='county'></input><br></br>
-          <label htmlFor='eircodeInput'>EirCode: </label>
-          <input type='text' id='eircodeInput' name='eirCode'></input><br></br>
-        </div>
-          
-        <p>Have an account?</p> 
-        <div className='userInputDiv'>
-          <label htmlFor='emailLoginInput'>Email: </label>
-          <input type='text' id='emailLoginInput' name='emailLogin'></input><br></br>
-          <label htmlFor='passwordLoginInput'>Password: </label>
-          <input type='password' id='passwordLoginInput' name='passwordLogin'></input><br></br>
-        </div>
-
         <div>
           <p>Booking details</p>
           <label htmlFor='numberOfGuestsInput'>Number of guests: </label>

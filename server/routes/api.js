@@ -70,63 +70,20 @@ router.post('/rooms', (req, res) => {
 })
 
 // Add a booking
-router.post('/bookings', async (req, res) => {
+router.post('/bookings', authenticateToken, async (req, res) => {
     const {
-        guestName,
-        email,
-        password,
-        repeatPassword,
-        phoneNumber,
-        town,
-        county,
-        eirCode,
         roomNumber,
         numberOfGuests,
         startDate,
         endDate,
-        emailLogin,
-        passwordLogin
     } = req.body
 
-    let guestId
-
-    // If the user has an account, they can log in and book without registering again, otherwise they can register and book at the same time
-    if (emailLogin && passwordLogin) {
-        const userResult = await pool.query(
-            `SELECT * FROM "guest" WHERE email = $1`, [emailLogin]
-        )
-        const user = userResult.rows[0]
-        if (!user) {
-            return res.status(400).json({ error: "Invalid email" })
-        }
-        const isPasswordValid = await bcrypt.compare(passwordLogin, user.password)
-        if (!isPasswordValid) {
-            return res.status(400).json({ error: "Invalid password" })
-        }
-        
-        guestId = user.id
+    if (!req.user) {
+        return res.status(401).json({ error: "User not authenticated" })
     }
-    // Register instead
-    else {
-        if (password !== repeatPassword) {
-            return res.status(400).json({ error: "Passwords do not match" })
-        }
 
-        // Hash the password before storing it in the database
-        const hashedPassword = await bcrypt.hash(password, 10)
+    const guestId = req.user.userId
 
-        // Create a new user and booking
-        const userResult = await pool.query(
-            `INSERT INTO "guest" 
-            ("guestName", "email", "password", "phoneNumber", "town", "county", "eirCode", "createdAt", "updatedAt")
-            VALUES ($1, $2, $3, $4, $5, $6, $7, NOW(), NOW())
-            RETURNING id`,
-            [guestName, email, hashedPassword, phoneNumber, town, county, eirCode]
-        )
-        
-
-        guestId = userResult.rows[0].id
-    }
     try {
         // Get the room id based on the room number
         if (!roomNumber || !numberOfGuests || !startDate || !endDate) {
@@ -195,7 +152,7 @@ router.get('/bookings', authenticateToken, async (req, res) => {
 })
 
 // Delete certain booking
-router.delete('/bookings/:id', async (req, res) => {
+router.delete('/bookings/:id', requireAdmin, async (req, res) => {
     const {
         id
     } = req.body
@@ -209,23 +166,42 @@ router.delete('/bookings/:id', async (req, res) => {
 })
 
 // !(:id) Show a certain booking
-router.get('/bookings/:id', (req, res) => {
+router.get('/bookings/:id', authenticateToken, async (req, res) => {
     const id = Number(req.params.id)
-    res.send(`Some booking with id ${id}`)
-})
 
-// Delete certain room
-router.delete('/rooms/:id', (req, res) => {
-    const id = Number(req.params.id)
-    res.send(`Deleting a room with id ${id}`)
-})
+    try {
+        const result = await pool.query(
+            `SELECT * FROM "reservation" WHERE id = $1`,
+            [id]
+        )
 
-function isAdmin(req, res) {
-    if (req.user && req.user.role == 'admin') {
-        return true
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Booking not found' })
+        }
+
+        res.json(result.rows[0])
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ error: 'Server error' })
     }
-    return false
-}
+})
+
+// Delete a certain room
+router.delete('/rooms/:id', requireAdmin, async (req, res) => {
+    const id = Number(req.params.id)
+
+    try {
+        await pool.query(
+            `DELETE FROM "room" WHERE id = $1`,
+            [id]
+        )
+
+        res.json({ message: 'Room deleted successfully' })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ error: 'Server error' })
+    }
+})
 
 // export
 export default router

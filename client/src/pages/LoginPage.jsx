@@ -1,29 +1,31 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Link } from "react-router-dom";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { Link } from "react-router-dom"
+import { useAuth } from '../context/AuthContext'
 
 function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const navigate = useNavigate()
+  const { login } = useAuth()
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error)
 
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
-      navigate('/rooms');
+      login(data.token, data.user) // update context and storage
+
+      navigate('/rooms')
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     }
   };
 
