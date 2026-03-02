@@ -47,6 +47,11 @@ function App() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           {user ? (
             <>
+              {user.role === 'ADMIN' && (
+                <Link to="/admin/dashboard" style={{ color: '#007bff', textDecoration: 'none', fontWeight: '500' }}>
+                  Admin Dashboard
+                </Link>
+              )}
               <span style={{ fontWeight: '500' }}>
                 Signed in as {user.email}
               </span>

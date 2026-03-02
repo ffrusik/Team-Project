@@ -27,6 +27,57 @@ function DashboardRoomsPage() {
     }));
   };
 
+  const handleSaveRoom = async (e) => {
+    e.preventDefault();
+
+    try {
+      const token = localStorage.getItem('token');
+      const method = editingRoom.id ? 'PUT' : 'POST';
+      const url = editingRoom.id 
+        ? `/api/admin/rooms/${editingRoom.id}`
+        : '/api/admin/rooms';
+
+      const res = await fetch(url, {
+        method,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.error || 'Failed to save room');
+      }
+
+      const savedRoom = await res.json();
+
+      // Update local state
+      if (editingRoom.id) {
+        // Update existing
+        setRooms(rooms.map(r => r.id === savedRoom.id ? savedRoom : r));
+      } else {
+        // Add new
+        setRooms([...rooms, savedRoom]);
+      }
+
+      // Reset form
+      setEditingRoom(null);
+      setFormData({
+        roomNumber: '',
+        description: '',
+        capacity: '',
+        price: '',
+        availability: true,
+      });
+
+      alert(editingRoom.id ? 'Room updated!' : 'Room added!');
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  };
+
   const fetchRooms = async () => {
     try {
       const token = localStorage.getItem('token')
@@ -82,8 +133,14 @@ function DashboardRoomsPage() {
   }
 
   const handleEdit = (room) => {
-    // TODO: open edit form/modal
-    alert(`Edit room ${room.roomNumber} (not implemented yet)`)
+    setEditingRoom(room);
+    setFormData({
+      roomNumber: room.roomNumber,
+      description: room.description || '',
+      capacity: room.capacity || '',
+      price: room.price || '',
+      availability: !!room.availability,
+    });
   }
 
   if (loading) return <div style={{ padding: '50px', textAlign: 'center' }}>Loading rooms...</div>
@@ -93,46 +150,120 @@ function DashboardRoomsPage() {
     <div className="container">
       <h1>Rooms Management</h1>
 
-    <form id="roomForm">
-        <input type="hidden" id="roomNumber" />
-        <div className="form-group">
+      {editingRoom !== null && (
+        <form id="roomForm" onSubmit={handleSaveRoom}>
+          {/* Hidden ID – only needed for edit to store tha value for backend */}
+          {editingRoom.id && (
+            <input type="hidden" name="id" value={editingRoom.id} />
+          )}
+
+          <div className="form-group">
             <label htmlFor="roomNumber">Room number</label>
-            <input type="number" id="roomNumber" required />
-        </div>
-        <div className="form-group">
+            <input 
+              type="number" 
+              id="roomNumber" 
+              name="roomNumber"
+              value={formData.roomNumber}
+              onChange={handleFormChange}
+              required 
+            />
+          </div>
+
+          <div className="form-group">
             <label htmlFor="description">Description</label>
-            <input type="text" id="description" />
-        </div>
-        <div className="form-group">
+            <input 
+              type="text" 
+              id="description" 
+              name="description"
+              value={formData.description}
+              onChange={handleFormChange}
+            />
+          </div>
+
+          <div className="form-group">
             <label htmlFor="capacity">Capacity</label>
-            <input type="number" id="capacity" required />
-        </div>
-        <div className="form-group">
+            <input 
+              type="number" 
+              id="capacity" 
+              name="capacity"
+              value={formData.capacity}
+              onChange={handleFormChange}
+              required 
+            />
+          </div>
+
+          <div className="form-group">
             <label htmlFor="price">Price</label>
-            <input type="number" id="price" required />
-        </div>
-        <div className="form-group">
+            <input 
+              type="number" 
+              id="price" 
+              name="price"
+              value={formData.price}
+              onChange={handleFormChange}
+              required 
+              step="0.01"
+            />
+          </div>
+
+          <div className="form-group">
             <label htmlFor="availability" className="checkbox-label">
-                <span>Available</span>
-                <input 
-                    type="checkbox" 
-                    id="availability" 
-                    name="availability" 
-                    checked={formData.availability}
-                    onChange={handleFormChange}
-                    required 
-                    style={{
-                        width: '20px',
-                        height: '20px',
-                        accentColor: '#28a745',
-                        cursor: 'pointer'
-                    }}/>
+              <span>Available</span>
+              <input 
+                type="checkbox" 
+                id="availability" 
+                name="availability"
+                checked={formData.availability}
+                onChange={handleFormChange}
+                style={{
+                  width: '20px',
+                  height: '20px',
+                  accentColor: '#28a745',
+                  cursor: 'pointer'
+                }}
+              />
             </label>
-        </div>
-        <div className="form-group">
-            <button type="submit" id="submitRoomBtn">Save Room</button>
-        </div>
-    </form>
+          </div>
+
+          <div className="form-group">
+            <button type="submit" id="submitRoomBtn">
+              {editingRoom.id ? 'Update Room' : 'Save Room'}
+            </button>
+            <button 
+              type="button" 
+              onClick={() => setEditingRoom(null)}
+              style={{ marginLeft: '10px', background: '#6c757d', color: 'white' }}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      )}
+
+      {/* Add New Room button – only shown when not editing */}
+      {editingRoom === null && (
+        <button 
+          onClick={() => {
+            setEditingRoom({}); // empty = new
+            setFormData({
+              roomNumber: '',
+              description: '',
+              capacity: '',
+              price: '',
+              availability: true,
+            });
+          }}
+          style={{
+            padding: '10px 20px',
+            background: '#007bff',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            marginBottom: '20px'
+          }}
+        >
+          + Add New Room
+        </button>
+      )}
 
       <table>
         <thead>
@@ -162,7 +293,7 @@ function DashboardRoomsPage() {
                 <td>{room.description || '-'}</td>
                 <td>{room.capacity || '-'}</td>
                 <td>€{room.price || '0'}</td>
-                <td>{room.availability ? '✓ Available' : '✗ Unavailable'}</td>
+                <td>{room.availability ? 'Available' : 'Unavailable'}</td>
                 <td>{room.updatedAt ? new Date(room.updatedAt).toLocaleString() : '-'}</td>
                 <td>
                   <button 
