@@ -64,11 +64,6 @@ router.get('/rooms/:id', async (req, res) => {
     }
 })
 
-// Add a new room
-router.post('/rooms', (req, res) => {
-    res.send('New room')
-})
-
 // Add a booking
 router.post('/bookings', authenticateToken, async (req, res) => {
     const {
@@ -207,6 +202,7 @@ router.delete('/admin/rooms/:id', authenticateToken, requireAdmin, async (req, r
   }
 })
 
+// Get ALL rooms
 router.get('/admin/rooms', authenticateToken, requireAdmin, async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM room')
@@ -214,6 +210,202 @@ router.get('/admin/rooms', authenticateToken, requireAdmin, async (req, res) => 
   } catch (err) {
     console.error(err)
     res.status(500).json([])
+  }
+})
+
+// Create a new room
+router.post('/admin/rooms', authenticateToken, requireAdmin, async (req, res) => {
+    const { roomNumber, description, capacity, price, availability } = req.body
+
+    try {
+        const result = await pool.query(
+            `INSERT INTO room 
+            ("roomNumber", "description", "capacity", "price", "availability", "createdAt", "updatedAt")
+            VALUES ($1, $2, $3, $4, $5, NOW(), NOW())
+            RETURNING *`,
+            [roomNumber, description, capacity, price, availability]
+        )
+
+        res.status(201).json(result.rows[0])
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ error: 'Failed to create room' })
+    }
+})
+
+// Edit a room
+router.put('/admin/rooms/:id', authenticateToken, requireAdmin, async (req, res) => {
+    const { id } = req.params
+    const { roomNumber, description, capacity, price, availability } = req.body
+
+    try {
+        const result = await pool.query(
+            `UPDATE room SET 
+            "roomNumber" = $1,
+            "description" = $2,
+            "capacity" = $3,
+            "price" = $4,
+            "availability" = $5,
+            "updatedAt" = NOW()
+            WHERE id = $6
+            RETURNING *`,
+            [roomNumber, description, capacity, price, availability, id]
+        )
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Room not found' })
+        }
+
+        res.json(result.rows[0])
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ error: 'Failed to update room' })
+    }
+})
+
+// Get ALL bookings
+router.get('/admin/bookings', authenticateToken, requireAdmin, async (req, res) => {
+    try {
+        if (req.user) {
+            // Join the reservation and room tables to get the room number for each booking
+            const result = await pool.query(`
+            SELECT 
+                reservation.*, 
+                room."roomNumber"
+            FROM reservation
+            JOIN room 
+                ON reservation."roomId" = room.id
+            `, [])
+
+            res.json({
+                success: true,
+                bookings: result.rows || [],  // always array
+                message: result.rows.length === 0 ? 'No bookings found' : undefined
+            });
+        }
+        else {
+            res.json({
+                success: false,
+                bookings: [],  // always array
+                message: 'User not authenticated'
+            });
+        }
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ 
+            success: false,
+            bookings: [],  // always array  
+            error: 'Server error' 
+        })
+    }
+})
+
+// Get ALL guests
+router.get('/admin/guests', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM guest');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to load guests' });
+  }
+});
+
+// Create a new guest
+router.post('/admin/guests', authenticateToken, requireAdmin, async (req, res) => {
+  const { guestName, email, password, phoneNumber, town, county, eirCode, role } = req.body;
+
+  if (!email || !password || !phoneNumber || !eirCode) {
+    return res.status(400).json({ error: 'Required fields missing' });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const result = await pool.query(
+      `INSERT INTO guest ("guestName", email, password, "phoneNumber", town, county, "eirCode", role, "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
+       RETURNING *`,
+      [guestName || email.split('@')[0], email, hashedPassword, phoneNumber, town || null, county || null, eirCode, role || 'USER']
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to add guest' });
+  }
+});
+
+router.put('/admin/guests/:id', authenticateToken, requireAdmin, async (req, res) => {
+    const { id } = req.params
+    const { guestName, email, password, phoneNumber, town, county, eirCode, role } = req.body
+
+    try {
+        let query;
+        let values;
+
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            query = `
+                UPDATE guest SET 
+                    "guestName" = $1,
+                    email = $2,
+                    password = $3,
+                    "phoneNumber" = $4,
+                    town = $5,
+                    county = $6,
+                    "eirCode" = $7,
+                    role = $8,
+                    "updatedAt" = NOW()
+                WHERE id = $9
+                RETURNING *
+            `;
+            values = [guestName || email.split('@')[0], email, hashedPassword, phoneNumber, town || null, county || null, eirCode, role || 'USER', id];
+        } else {
+            query = `
+                UPDATE guest SET 
+                    "guestName" = $1,
+                    email = $2,
+                    "phoneNumber" = $3,
+                    town = $4,
+                    county = $5,
+                    "eirCode" = $6,
+                    role = $7,
+                    "updatedAt" = NOW()
+                WHERE id = $8
+                RETURNING *
+            `;
+            values = [guestName || email.split('@')[0], email, phoneNumber, town || null, county || null, eirCode, role || 'USER', id];
+        }
+
+        const result = await pool.query(query, values);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: 'Guest not found' });
+        }
+
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to update guest' });
+    }
+});
+
+router.delete('/admin/guests/:id', authenticateToken, requireAdmin, async (req, res) => {
+  const { id } = req.params
+
+  try {
+    const result = await pool.query(
+      'DELETE FROM guest WHERE id = $1 RETURNING id',
+      [id]
+    )
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ error: 'Guest not found' })
+    }
+
+    res.json({ message: 'Guest deleted successfully' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Failed to delete guest' })
   }
 })
 
