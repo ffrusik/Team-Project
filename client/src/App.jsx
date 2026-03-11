@@ -100,7 +100,6 @@ function App() {
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/dashboard/rooms" element={<DashboardRoomsPage />} />
           <Route path="/admin/dashboard/guests" element={<DashboardGuestsPage />} />
-          <Route path="/dashboard/reservations" element={<DashboardReservationsPage />} />
         </Route>
 
         {/* Catch-all */}
