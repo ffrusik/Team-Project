@@ -62,10 +62,16 @@ db.serialize(() => {
     CheckInTime TEXT,
     CheckOutTime TEXT,
     NumberOfGuests INTEGER,
+    Status TEXT DEFAULT 'Pending',
     FOREIGN KEY (GuestID) REFERENCES Guest(GuestID),
     FOREIGN KEY (RoomID) REFERENCES Room(RoomID)
   )
   `)
+  db.run(`ALTER TABLE Reservation ADD COLUMN Status TEXT DEFAULT 'Pending'`, (err) => {
+  if (err && !err.message.includes("duplicate column name")) {
+    console.error(err.message)
+  }
+})
 
   db.run(`
   CREATE TABLE IF NOT EXISTS ExtraType (
