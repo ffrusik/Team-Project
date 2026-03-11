@@ -5,8 +5,9 @@ import express from 'express'
 import cors from 'cors'
 
 import db from './db.js'
-import apiRouter from './routes/api.js'
+//import apiRouter from './routes/api.js'
 import guestRoutes from './routes/guests.js'
+import roomRoutes from "./routes/rooms.js";
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -20,8 +21,9 @@ app.use((req, res, next) => {
     next()
 })
 
-app.use('/api', apiRouter)
+//app.use('/api', apiRouter)
 app.use('/api/guests', guestRoutes)
+app.use("/api/rooms", roomRoutes);
 
 db.serialize(() => {
   //tables
