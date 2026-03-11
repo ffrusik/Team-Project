@@ -5,12 +5,12 @@ import jwt from 'jsonwebtoken'
 
 const router = express.Router()
 
-const JWT_SECRET = process.env.JWT_SECRET
-
-if (!JWT_SECRET) {
-  console.error('JWT_SECRET not set')
-  process.exit(1)
-}
+//const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
+//if (!JWT_SECRET) {
+  //console.error('JWT_SECRET not set')
+  //process.exit(1)
+//}
 
 // Middleware: Verify JWT and attach user to req
 const authenticateToken = (req, res, next) => {
