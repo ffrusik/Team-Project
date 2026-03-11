@@ -9,7 +9,7 @@ import DashboardRoomsPage from "./pages/DashboardRoomsPage.jsx";
 import DashboardGuestsPage from "./pages/DashboardGuestsPage";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
-import DashboardReservationsPage from "./pages/DashboardReseravtionsPage.jsx";
+//import DashboardReservationsPage from "./pages/DashboardReseravtionsPage.jsx";
 import "./App.css"
 
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
