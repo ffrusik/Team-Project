@@ -1,34 +1,102 @@
 import dotenv from 'dotenv'
 dotenv.config()
+
 import express from 'express'
 import cors from 'cors'
-import pool from './db.js'
+
+import db from './db.js'
+//import apiRouter from './routes/api.js'
+import guestRoutes from './routes/guests.js'
+import roomRoutes from "./routes/rooms.js";
+import reservationRoutes from "./routes/reservations.js";
 
 const app = express()
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 5000
 
-// routers
-import apiRouter from './routes/api.js';
-import authRouter from './routes/auth.js'
-
-// middleware
 app.use(express.json())
 app.use(cors())
 
-// logging
 app.use((req, res, next) => {
     const timestamp = new Date().toISOString()
-
     console.log(`[${timestamp}] ${req.method} ${req.url}`)
-
     next()
 })
 
-// importing routers
-app.use('/api', apiRouter)
-app.use('/api/auth', authRouter);
+//app.use('/api', apiRouter)
+app.use('/api/guests', guestRoutes)
+app.use("/api/rooms", roomRoutes);
+app.use("/api/reservations", reservationRoutes);
 
-// starting up the backend
+
+  //tables
+  // create project tables
+db.serialize(() => {
+
+  db.run(`
+  CREATE TABLE IF NOT EXISTS Guest (
+    GuestID INTEGER PRIMARY KEY AUTOINCREMENT,
+    FirstName TEXT,
+    LastName TEXT,
+    Email TEXT,
+    Password TEXT,
+    Phone TEXT,
+    Eircode TEXT
+  )
+  `)
+
+  db.run(`
+  CREATE TABLE IF NOT EXISTS Room (
+    RoomID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Type TEXT,
+    PricePerNight REAL
+  )
+  `)
+
+  db.run(`
+  CREATE TABLE IF NOT EXISTS Reservation (
+    ResID INTEGER PRIMARY KEY AUTOINCREMENT,
+    GuestID INTEGER,
+    RoomID INTEGER,
+    StartDate TEXT,
+    EndDate TEXT,
+    CheckInTime TEXT,
+    CheckOutTime TEXT,
+    NumberOfGuests INTEGER,
+    Status TEXT DEFAULT 'Pending',
+    FOREIGN KEY (GuestID) REFERENCES Guest(GuestID),
+    FOREIGN KEY (RoomID) REFERENCES Room(RoomID)
+  )
+  `)
+  db.run(`ALTER TABLE Reservation ADD COLUMN Status TEXT DEFAULT 'Pending'`, (err) => {
+  if (err && !err.message.includes("duplicate column name")) {
+    console.error(err.message)
+  }
+})
+
+  db.run(`
+  CREATE TABLE IF NOT EXISTS ExtraType (
+    ExtraTypeID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Name TEXT,
+    Cost REAL
+  )
+  `)
+
+  db.run(`
+  CREATE TABLE IF NOT EXISTS Extra (
+    ExtraID INTEGER PRIMARY KEY AUTOINCREMENT,
+    Date TEXT,
+    Time TEXT,
+    Quantity INTEGER,
+    ReservationID INTEGER,
+    ExtraTypeID INTEGER,
+    FOREIGN KEY (ReservationID) REFERENCES Reservation(ResID),
+    FOREIGN KEY (ExtraTypeID) REFERENCES ExtraType(ExtraTypeID)
+  )
+  `)
+
+})
+//})
+
 app.listen(PORT, () => {
-    console.log('Server started on port 5000...')
+    console.log(`Server started on port ${PORT}`)
 })
