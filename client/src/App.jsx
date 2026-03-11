@@ -9,7 +9,7 @@ import DashboardRoomsPage from "./pages/DashboardRoomsPage.jsx";
 import DashboardGuestsPage from "./pages/DashboardGuestsPage";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
-
+import DashboardReservationsPage from "./pages/DashboardReseravtionsPage.jsx";
 import "./App.css"
 
 import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
@@ -89,6 +89,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/book/:id" element={<BookRoomPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
+
         </Route>
 
         {/* Auth routes */}
@@ -99,6 +100,7 @@ function App() {
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/dashboard/rooms" element={<DashboardRoomsPage />} />
           <Route path="/admin/dashboard/guests" element={<DashboardGuestsPage />} />
+          <Route path="/dashboard/reservations" element={<DashboardReservationsPage />} />
         </Route>
 
         {/* Catch-all */}
