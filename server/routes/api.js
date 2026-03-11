@@ -1,34 +1,34 @@
-import express from 'express'
-import pool from '../db.js'
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
+/* //import express from 'express'
+//import pool from '../db.js'
+//import bcrypt from 'bcrypt'
+//import jwt from 'jsonwebtoken'
 
-const router = express.Router()
+//const router = express.Router()
 
 //const JWT_SECRET = process.env.JWT_SECRET
-const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
+//const JWT_SECRET = process.env.JWT_SECRET || "dev-secret";
 //if (!JWT_SECRET) {
   //console.error('JWT_SECRET not set')
   //process.exit(1)
 //}
 
 // Middleware: Verify JWT and attach user to req
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+//const authenticateToken = (req, res, next) => {
+  //const authHeader = req.headers['authorization'];
+  //const token = authHeader && authHeader.split(' ')[1];
 
-  if (!token) {
-    return res.status(401).json({ error: 'No token provided' });
-  }
+  //if (!token) {
+    //return res.status(401).json({ error: 'No token provided' });
+  //}
 
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ error: 'Invalid or expired token' });
-    }
-    req.user = user; // { userId, email, role }
-    next();
-  });
-};
+  //jwt.verify(token, JWT_SECRET, (err, user) => {
+   // if (err) {
+      //return res.status(403).json({ error: 'Invalid or expired token' });
+    //}
+    //req.user = user; // { userId, email, role }
+   // next();
+  //});
+//};
 
 // Middleware: Only admins
 const requireAdmin = (req, res, next) => {
@@ -410,4 +410,4 @@ router.delete('/admin/guests/:id', authenticateToken, requireAdmin, async (req, 
 })
 
 // export
-export default router
+export default router */

@@ -8,6 +8,7 @@ import db from './db.js'
 //import apiRouter from './routes/api.js'
 import guestRoutes from './routes/guests.js'
 import roomRoutes from "./routes/rooms.js";
+import reservationRoutes from "./routes/reservations.js";
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -24,8 +25,9 @@ app.use((req, res, next) => {
 //app.use('/api', apiRouter)
 app.use('/api/guests', guestRoutes)
 app.use("/api/rooms", roomRoutes);
+app.use("/api/reservations", reservationRoutes);
 
-db.serialize(() => {
+
   //tables
   // create project tables
 db.serialize(() => {
@@ -87,7 +89,7 @@ db.serialize(() => {
   `)
 
 })
-})
+//})
 
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`)
