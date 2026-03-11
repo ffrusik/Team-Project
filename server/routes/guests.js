@@ -1,37 +1,89 @@
 import express from "express";
-import db from "../db.js";
+import { runQuery, getQuery, allQuery } from "../database.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  db.all("SELECT * FROM Guest", [], (err, rows) => {
-    if (err) {
-      res.status(500).json(err);
-      return;
-    }
-    res.json(rows);
-  });
+
+// GET all guests
+router.get("/", async (req, res) => {
+  const guests = await allQuery("SELECT * FROM Guest");
+  res.json(guests);
 });
 
-router.post("/", (req, res) => {
-  const { FirstName, LastName, Email, Password, Phone, Eircode } = req.body;
 
-  db.run(
-    `INSERT INTO Guest (FirstName, LastName, Email, Password, Phone, Eircode)
-     VALUES (?, ?, ?, ?, ?, ?)`,
-    [FirstName, LastName, Email, Password, Phone, Eircode],
-    function (err) {
-      if (err) {
-        res.status(500).json(err);
-        return;
-      }
-
-      res.json({
-        message: "Guest created",
-        id: this.lastID
-      });
-    }
+// GET one guest
+router.get("/:id", async (req, res) => {
+  const guest = await getQuery(
+    "SELECT * FROM Guest WHERE GuestID=?",
+    [req.params.id]
   );
+
+  res.json(guest);
 });
+
+
+// CREATE guest
+router.post("/", async (req, res) => {
+
+  const {
+    FirstName,
+    LastName,
+    Email,
+    Password,
+    Phone,
+    Eircode
+  } = req.body;
+
+  const result = await runQuery(
+    `INSERT INTO Guest
+    (FirstName, LastName, Email, Password, Phone, Eircode)
+    VALUES (?, ?, ?, ?, ?, ?)`,
+    [FirstName, LastName, Email, Password, Phone, Eircode]
+  );
+
+  res.json({
+    message: "Guest created",
+    id: result.id
+  });
+
+});
+
+
+// UPDATE guest
+router.put("/:id", async (req, res) => {
+
+  const {
+    FirstName,
+    LastName,
+    Email,
+    Password,
+    Phone,
+    Eircode
+  } = req.body;
+
+  await runQuery(
+    `UPDATE Guest
+     SET FirstName=?, LastName=?, Email=?, Password=?, Phone=?, Eircode=?
+     WHERE GuestID=?`,
+    [FirstName, LastName, Email, Password, Phone, Eircode, req.params.id]
+  );
+
+  res.json({ message: "Guest updated" });
+
+});
+
+
+// DELETE guest
+router.delete("/:id", async (req, res) => {
+
+  await runQuery(
+    "DELETE FROM Guest WHERE GuestID=?",
+    [req.params.id]
+  );
+
+  res.json({ message: "Guest deleted" });
+
+});
+
 
 export default router;
