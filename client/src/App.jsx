@@ -22,7 +22,7 @@ function App() {
 
   return (
     <>  
-      <nav style={{
+      {/* <nav style={{
         padding: '16px 32px',
         background: 'linear-gradient(90deg, #9074e2, #d8b4fe)',
         borderBottom: '1px solid linear-gradient(90deg, #7758d4, #7d22df)',
@@ -34,19 +34,48 @@ function App() {
         zIndex: 1000,
         boxShadow: '0 5px 10px rgba(0,0,0,0.15)',
         borderRadius: '0 0 12px 12px',
-      }}>
+      }}> */}
+      <nav className="navbar">
+        <div className="nav-left">
+          <Link to="/rooms" className="logo">
+            Luxury Hotel
+          </Link>
+
+          <Link to="/rooms">Rooms</Link>
+          <Link to="/bookings">Bookings</Link>
+        </div>
+
+        <div className="nav-right">
+          {user ? (
+            <>
+              <span className="user-email">
+                {user.email}
+              </span>
+
+              <button onClick={logout}>
+                Sign Out
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Sign In</Link>
+              <Link to="/register">Sign Up</Link>
+            </>
+          )}
+        </div>
+    </nav>
         {/* Left: Links */}
-        <div style={{ display: 'flex', gap: '24px' }}>
+        {/* <div style={{ display: 'flex', gap: '24px' }}>
           <Link to="/rooms" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>
             Rooms
           </Link>
           <Link to="/bookings" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>
             Bookings
           </Link>
-        </div>
+        </div> */}
 
         {/* Right: Auth controls */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+       {/*  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           {user ? (
             <>
               {user.role === 'ADMIN' && (
@@ -81,8 +110,8 @@ function App() {
               </Link>
             </>
           )}
-        </div>
-      </nav>
+        </div> */}
+      {/* </nav> */}
 
       <Routes>
         {/* Public routes */}
