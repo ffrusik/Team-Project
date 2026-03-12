@@ -10,7 +10,7 @@ export default function RoomsPage() {
       .then((data) => setRooms(data));
   }, []);
 
-  return (
+ /*  return (
     <div>
       <h1>Rooms</h1>
 
@@ -23,5 +23,37 @@ export default function RoomsPage() {
         </div>
       ))}
     </div>
-  );
+  ); */
+  return (
+  <>
+    <section className="hero">
+      <div className="hero-content">
+        <h1>Luxury Hotel</h1>
+        <p>Elegant rooms and seamless booking.</p>
+      </div>
+    </section>
+
+    <main className="page-container">
+      <h2 className="section-title">Available Rooms</h2>
+
+      <div className="room-grid">
+        {rooms.map((room) => (
+          <div className="room-card" key={room.RoomID}>
+            <div className="room-image"></div>
+
+            <div className="room-content">
+              <h3>{room.Type} Room</h3>
+              <p>Room ID: {room.RoomID}</p>
+              <p className="price">€{room.PricePerNight} / night</p>
+
+              <Link className="book-btn" to={`/book/${room.RoomID}`}>
+                Book Now
+              </Link>
+            </div>
+          </div>
+        ))}
+      </div>
+    </main>
+  </>
+);
 }
