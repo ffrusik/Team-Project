@@ -51,7 +51,7 @@ function BookRoomPage() {
   };
 
     try {
-      const response = await fetch('/api/bookings', {
+      const response = await fetch('/api/reservations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -83,6 +83,14 @@ function BookRoomPage() {
       <form onSubmit={handleSubmit}>
       <div>
         <p>Booking details</p>
+        <label htmlFor='guestIdInput'>Guest ID: </label>
+        <input
+          type='number'
+          id='guestIdInput'
+          name='guestId'
+          min='1'
+          required
+        /><br/>
         <label htmlFor='numberOfGuestsInput'>Number of guests: </label>
         <input 
           type='number' 
@@ -121,10 +129,9 @@ function BookRoomPage() {
 
       {room && !loading && (
         <div id='roomDetailsDiv'>
-          <p>Details of the room:</p>
-          <p>Room number: {room.roomNumber}</p>
-          <p>Description: {room.description || 'No description'}</p>
-          <p>Price per night: €{room.price || '0'}</p>
+          <p>Room ID: {room.RoomID}</p>
+          <p>Type: {room.Type}</p>
+          <p>Price per night: €{room.PricePerNight}</p>
         </div>
       )}
 

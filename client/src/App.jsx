@@ -12,7 +12,7 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 //import DashboardReservationsPage from "./pages/DashboardReseravtionsPage.jsx";
 import "./App.css"
 
-import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
+//import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
 import ProtectedRoute from "./components/ProtectedRoute.jsx"
 
 import { useAuth } from "./context/AuthContext.jsx"
@@ -21,17 +21,19 @@ function App() {
   const { user, logout } = useAuth()
 
   return (
-    <div>
+    <>  
       <nav style={{
         padding: '16px 32px',
-        background: '#f8f9fa',
-        borderBottom: '1px solid #ddd',
+        background: 'linear-gradient(90deg, #9074e2, #d8b4fe)',
+        borderBottom: '1px solid linear-gradient(90deg, #7758d4, #7d22df)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         position: 'sticky',
         top: 0,
         zIndex: 1000,
+        boxShadow: '0 5px 10px rgba(0,0,0,0.15)',
+        borderRadius: '0 0 12px 12px',
       }}>
         {/* Left: Links */}
         <div style={{ display: 'flex', gap: '24px' }}>
@@ -86,26 +88,28 @@ function App() {
         {/* Public routes */}
         <Route path="/rooms" element={<RoomsPage />} />
 
-        <Route element={<ProtectedRoute />}>
+        {/* <Route element={<ProtectedRoute />}> Temporarily disabiing logging to test booking page*/}
           <Route path="/book/:id" element={<BookRoomPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
+        
 
-        </Route>
+
+        {/* </Route> */}
 
         {/* Auth routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         
-        <Route element={<ProtectedAdminRoute />}>
+        {/* <Route element={<ProtectedAdminRoute />}> */}
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/dashboard/rooms" element={<DashboardRoomsPage />} />
           <Route path="/admin/dashboard/guests" element={<DashboardGuestsPage />} />
-        </Route>
+        {/* </Route> */}
 
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/rooms" replace />} />
       </Routes>
-    </div>
+    </> 
   );
 }
 
