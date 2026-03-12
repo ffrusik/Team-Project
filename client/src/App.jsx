@@ -12,7 +12,7 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 //import DashboardReservationsPage from "./pages/DashboardReseravtionsPage.jsx";
 import "./App.css"
 
-import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
+//import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
 import ProtectedRoute from "./components/ProtectedRoute.jsx"
 
 import { useAuth } from "./context/AuthContext.jsx"
@@ -100,11 +100,11 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         
-        <Route element={<ProtectedAdminRoute />}>
+        {/* <Route element={<ProtectedAdminRoute />}> */}
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/dashboard/rooms" element={<DashboardRoomsPage />} />
           <Route path="/admin/dashboard/guests" element={<DashboardGuestsPage />} />
-        </Route>
+        {/* </Route> */}
 
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/rooms" replace />} />
