@@ -91,12 +91,10 @@ function App() {
         {/* <Route element={<ProtectedRoute />}> Temporarily disabiing logging to test booking page*/}
           <Route path="/book/:id" element={<BookRoomPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
-<<<<<<< HEAD
+        
+
 
         {/* </Route> */}
-=======
-        </Route>
->>>>>>> 2945bbbb05dcca2b0b0e0ec3d3d89215a94baa69
 
         {/* Auth routes */}
         <Route path="/login" element={<LoginPage />} />
