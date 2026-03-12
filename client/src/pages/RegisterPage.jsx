@@ -35,7 +35,7 @@ function RegisterPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '80px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+    <div style={{ maxWidth: '400px', margin: '80px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', background: '#f8e7ff' }}>
       <h1>Register</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
@@ -44,7 +44,7 @@ function RegisterPage() {
           placeholder="Name"
           value={guestName}
           onChange={e => setGuestName(e.target.value)}
-          style={{ width: '100%', padding: '10px', margin: '10px 0' }}
+          style={{ width: '93%', padding: '10px', margin: '10px 0' }}
         />
         <input
           type="email"
@@ -52,7 +52,7 @@ function RegisterPage() {
           value={email}
           onChange={e => setEmail(e.target.value)}
           required
-          style={{ width: '100%', padding: '10px', margin: '10px 0' }}
+          style={{ width: '93%', padding: '10px', margin: '10px 0' }}
         />
         <input
           type="password"
@@ -60,7 +60,7 @@ function RegisterPage() {
           value={password}
           onChange={e => setPassword(e.target.value)}
           required
-          style={{ width: '100%', padding: '10px', margin: '10px 0' }}
+          style={{ width: '93%', padding: '10px', margin: '10px 0' }}
         />
         <input
           type="text"
@@ -68,21 +68,21 @@ function RegisterPage() {
           value={phoneNumber}
           onChange={e => setPhoneNumber(e.target.value)}
           required
-          style={{ width: '100%', padding: '10px', margin: '10px 0' }}
+          style={{ width: '93%', padding: '10px', margin: '10px 0' }}
         />
         <input
           type="text"
           placeholder="Town"
           value={town}
           onChange={e => setTown(e.target.value)}
-          style={{ width: '100%', padding: '10px', margin: '10px 0' }}
+          style={{ width: '93%', padding: '10px', margin: '10px 0' }}
         />
         <input
           type="text"
           placeholder="County"
           value={county}
           onChange={e => setCounty(e.target.value)}
-          style={{ width: '100%', padding: '10px', margin: '10px 0' }}
+          style={{ width: '93%', padding: '10px', margin: '10px 0' }}
         />
         <input
           type="text"
@@ -90,7 +90,7 @@ function RegisterPage() {
           value={eirCode}
           onChange={e => setEirCode(e.target.value)}
           required
-          style={{ width: '100%', padding: '10px', margin: '10px 0' }}
+          style={{ width: '93%', padding: '10px', margin: '10px 0' }}
         />
         <button type="submit" style={{ width: '100%', padding: '12px' }}>
           Register

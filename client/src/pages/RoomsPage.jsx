@@ -15,11 +15,11 @@ function RoomsPage() {
       <h1>Rooms</h1>
 
       {rooms.map(room => (
-        <div key={room.id}>
+        <div key={room.id} className="room-card">
           <h3>Room number: {room.roomNumber}</h3>
           <p>Description: {room.description}</p>
           <p>Price: €{room.price}</p>
-          <Link to={`/book/${room.roomNumber}`}>Book</Link>
+          <Link className="book-btn" to={`/book/${room.roomNumber}`}>Book</Link>
         </div>
       ))}
     </div>

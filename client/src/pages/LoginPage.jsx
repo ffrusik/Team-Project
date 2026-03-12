@@ -30,7 +30,7 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '80px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+    <div style={{ maxWidth: '400px', margin: '80px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', background: '#f8e7ff'}}>
       <h1>Login</h1>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleSubmit}>
@@ -40,7 +40,7 @@ function LoginPage() {
           value={email}
           onChange={e => setEmail(e.target.value)}
           required
-          style={{ width: '100%', padding: '10px', margin: '10px 0' }}
+          style={{ width: '93%', padding: '10px', margin: '10px 0' }}
         />
         <input
           type="password"
@@ -48,7 +48,7 @@ function LoginPage() {
           value={password}
           onChange={e => setPassword(e.target.value)}
           required
-          style={{ width: '100%', padding: '10px', margin: '10px 0' }}
+          style={{ width: '93%', padding: '10px', margin: '10px 0' }}
         />
         <button type="submit" style={{ width: '100%', padding: '12px' }}>
           Login
