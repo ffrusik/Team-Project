@@ -21,17 +21,19 @@ function App() {
   const { user, logout } = useAuth()
 
   return (
-    <div>
+    <>  
       <nav style={{
         padding: '16px 32px',
-        background: '#f8f9fa',
-        borderBottom: '1px solid #ddd',
+        background: 'linear-gradient(90deg, #9074e2, #d8b4fe)',
+        borderBottom: '1px solid linear-gradient(90deg, #7758d4, #7d22df)',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
         position: 'sticky',
         top: 0,
         zIndex: 1000,
+        boxShadow: '0 5px 10px rgba(0,0,0,0.15)',
+        borderRadius: '0 0 12px 12px',
       }}>
         {/* Left: Links */}
         <div style={{ display: 'flex', gap: '24px' }}>
@@ -89,8 +91,12 @@ function App() {
         {/* <Route element={<ProtectedRoute />}> Temporarily disabiing logging to test booking page*/}
           <Route path="/book/:id" element={<BookRoomPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
+<<<<<<< HEAD
 
         {/* </Route> */}
+=======
+        </Route>
+>>>>>>> 2945bbbb05dcca2b0b0e0ec3d3d89215a94baa69
 
         {/* Auth routes */}
         <Route path="/login" element={<LoginPage />} />
@@ -105,7 +111,7 @@ function App() {
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/rooms" replace />} />
       </Routes>
-    </div>
+    </> 
   );
 }
 

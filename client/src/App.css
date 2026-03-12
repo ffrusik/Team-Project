@@ -3,7 +3,40 @@ body {
   background-color: #f8f9fa;
   color: #333;
   margin: 0;
+  padding: 0px;
+  background: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)),url("./Images/hotelSample.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+body > div {
   padding: 20px;
+}
+
+body > div > nav {
+  padding: 0;
+  margin: -20px -20px 0 -20px;
+}
+
+nav a {
+  position: relative;
+}
+
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  width: 0%;
+  height: 2px;
+  background: currentColor;
+  transition: width 0.25s ease;
+}
+
+nav a:hover::after {
+  width: 100%;
 }
 
 .container {
@@ -17,6 +50,15 @@ h1 {
   color: #2c3e50;
   border-bottom: 2px solid #eee;
   padding-bottom: 10px;
+  text-align: center;
+}
+
+.room-card {
+  background: rgb(239, 210, 255);
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 /* Form */
@@ -26,6 +68,21 @@ form {
   border: 1px solid #ddd;
   border-radius: 8px;
   margin-bottom: 30px;
+}
+
+.book-btn {
+  display: inline-block;
+  padding: 10px 16px;
+  background: #8452d6;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+.book-btn:hover {
+  background: #9371c7;
 }
 
 .form-group {
