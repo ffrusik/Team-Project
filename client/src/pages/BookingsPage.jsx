@@ -1,24 +1,14 @@
 import { useEffect, useState } from 'react';
 
 function BookingsPage() {
-  const [bookings, setBookings] = useState([]); // always array
+  const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-          throw new Error('Please log in to view bookings');
-        }
-
-        const res = await fetch('/api/bookings', {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        });
+        const res = await fetch('http://localhost:5000/api/reservations');
 
         const data = await res.json();
 
@@ -26,7 +16,7 @@ function BookingsPage() {
           throw new Error(data.error || 'Failed to load bookings');
         }
 
-        setBookings(data.bookings || []);
+        setBookings(data || []);
       } catch (err) {
         setError(err.message);
         setBookings([]);
@@ -49,19 +39,26 @@ function BookingsPage() {
       {bookings.length === 0 ? (
         <p>You have no bookings yet.</p>
       ) : (
-        bookings.map(booking => (
-          <div key={booking.id} style={{
-            border: '1px solid #ddd',
-            borderRadius: '8px',
-            padding: '16px',
-            marginBottom: '16px',
-            background: '#f9f9f9'
-          }}>
-            <h3>Room number: {booking.roomNumber}</h3>
-            <p>Start date: {new Date(booking.startDate).toLocaleDateString()}</p>
-            <p>End date: {new Date(booking.endDate).toLocaleDateString()}</p>
-            <p>Number of guests: {booking.numberOfGuests}</p>
-            <p>Price: €{booking.price}</p>
+        bookings.map((booking) => (
+          <div
+            key={booking.ResID}
+            style={{
+              border: '1px solid #ddd',
+              borderRadius: '8px',
+              padding: '16px',
+              marginBottom: '16px',
+              background: '#f9f9f9'
+            }}
+          >
+            <h3>Reservation ID: {booking.ResID}</h3>
+            <p>Guest ID: {booking.GuestID}</p>
+            <p>Room ID: {booking.RoomID}</p>
+            <p>Start date: {booking.StartDate}</p>
+            <p>End date: {booking.EndDate}</p>
+            <p>Check-in time: {booking.CheckInTime || 'N/A'}</p>
+            <p>Check-out time: {booking.CheckOutTime || 'N/A'}</p>
+            <p>Number of guests: {booking.NumberOfGuests}</p>
+            <p>Status: {booking.Status}</p>
           </div>
         ))
       )}

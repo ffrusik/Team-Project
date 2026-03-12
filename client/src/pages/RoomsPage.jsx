@@ -15,11 +15,11 @@ function RoomsPage() {
       <h1>Rooms</h1>
 
       {rooms.map(room => (
-        <div key={room.id}>
-          <h3>Room number: {room.roomNumber}</h3>
-          <p>Description: {room.description}</p>
-          <p>Price: €{room.price}</p>
-          <Link to={`/book/${room.roomNumber}`}>Book</Link>
+        <div key={room.RoomID}>
+          <h3>Room ID: {room.RoomID}</h3>
+          <p>Type: {room.Type}</p>
+          <p>Price: €{room.PricePerNight}</p>
+          <Link to={`/book/${room.RoomID}`}>Book</Link>
         </div>
       ))}
     </div>

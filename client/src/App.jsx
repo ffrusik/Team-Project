@@ -86,11 +86,11 @@ function App() {
         {/* Public routes */}
         <Route path="/rooms" element={<RoomsPage />} />
 
-        <Route element={<ProtectedRoute />}>
+        {/* <Route element={<ProtectedRoute />}> Temporarily disabiing logging to test booking page*/}
           <Route path="/book/:id" element={<BookRoomPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
 
-        </Route>
+        {/* </Route> */}
 
         {/* Auth routes */}
         <Route path="/login" element={<LoginPage />} />
