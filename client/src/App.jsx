@@ -13,7 +13,7 @@ import RegisterPage from "./pages/RegisterPage.jsx";
 import "./App.css"
 
 //import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
-import ProtectedRoute from "./components/ProtectedRoute.jsx"
+//import ProtectedRoute from "./components/ProtectedRoute.jsx"
 
 import { useAuth } from "./context/AuthContext.jsx"
 
