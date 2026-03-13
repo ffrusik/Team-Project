@@ -1,22 +1,23 @@
 import express from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { runQuery } from '../database.js'
 //import { PrismaClient } from '@prisma/client'
-import { Pool } from 'pg'
+// import { Pool } from 'pg'
 //import { PrismaPg } from '@prisma/adapter-pg'
 
-const connectionString = process.env.DATABASE_URL
-const pool = new Pool({ connectionString })
-const adapter = new PrismaPg(pool)
+// const connectionString = process.env.DATABASE_URL
+// const pool = new Pool({ connectionString })
+// const adapter = new PrismaPg(pool)
 
 //const prisma = new PrismaClient({
   //adapter,
-  lo//g: ['query', 'info', 'warn', 'error'],
+  //log: ['query', 'info', 'warn', 'error'],
 //})
 
 const router = express.Router()
 
-const JWT_SECRET = process.env.JWT_SECRET
+const JWT_SECRET = process.env.JWT_SECRET || "scrt_jwt_key_tp_123"
 
 if (!JWT_SECRET) {
   console.error('JWT_SECRET not set in environment variables')
@@ -43,25 +44,24 @@ router.post('/register', async (req, res) => {
   }
 
   try {
-    const existing = await prisma.guest.findUnique({ where: { email } })
+    const existing = await runQuery(
+        `SELECT * FROM Guest
+        WHERE Email = ?`,
+        [Email]
+      );
+
     if (existing) {
       return res.status(409).json({ error: 'Email already exists' })
     }
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const user = await prisma.guest.create({
-      data: {
-        guestName: guestName || email.split('@')[0],
-        email,
-        password: hashedPassword,
-        phoneNumber,
-        town: town || null,     // optional
-        county: county || null, // optional
-        eirCode,
-        role: 'USER',           // Prisma maps this to Role.USER
-      },
-    })
+    const user = await runQuery(
+      `INSERT INTO Guest
+      (FirstName, LastName, Email, Password, Phone, Town, County, Eircode, Role)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [guestName || email.split('@')[0], email, hashedPassword, phoneNumber, town || null, county || null, eirCode, 'USER']
+    );
 
     const token = jwt.sign(
       { userId: user.id, 

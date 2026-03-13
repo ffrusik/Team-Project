@@ -5,10 +5,11 @@ import express from 'express'
 import cors from 'cors'
 
 import db from './db.js'
-//import apiRouter from './routes/api.js'
+import apiRouter from './routes/api.js'
 import guestRoutes from './routes/guests.js'
 import roomRoutes from "./routes/rooms.js";
 import reservationRoutes from "./routes/reservations.js";
+import authRoutes from "./routes/auth.js"
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -22,10 +23,11 @@ app.use((req, res, next) => {
     next()
 })
 
-//app.use('/api', apiRouter)
+app.use('/api', apiRouter)
 app.use('/api/guests', guestRoutes)
 app.use("/api/rooms", roomRoutes);
 app.use("/api/reservations", reservationRoutes);
+app.use("/api/auth", authRoutes);
 
 
   //tables

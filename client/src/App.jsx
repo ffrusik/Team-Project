@@ -9,11 +9,11 @@ import DashboardRoomsPage from "./pages/DashboardRoomsPage.jsx";
 import DashboardGuestsPage from "./pages/DashboardGuestsPage";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
-//import DashboardReservationsPage from "./pages/DashboardReseravtionsPage.jsx";
+// import DashboardReservationsPage from "./pages/DashboardReseravtionsPage.jsx";
 import "./App.css"
 
-//import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
-//import ProtectedRoute from "./components/ProtectedRoute.jsx"
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
+import ProtectedRoute from "./components/ProtectedRoute.jsx"
 
 import { useAuth } from "./context/AuthContext.jsx"
 
@@ -22,7 +22,7 @@ function App() {
 
   return (
     <>  
-      {/* <nav style={{
+      <nav style={{
         padding: '16px 32px',
         background: 'linear-gradient(90deg, #9074e2, #d8b4fe)',
         borderBottom: '1px solid linear-gradient(90deg, #7758d4, #7d22df)',
@@ -34,7 +34,7 @@ function App() {
         zIndex: 1000,
         boxShadow: '0 5px 10px rgba(0,0,0,0.15)',
         borderRadius: '0 0 12px 12px',
-      }}> */}
+      }}>
       <nav className="navbar">
         <div className="nav-left">
           <Link to="/rooms" className="logo">
@@ -45,7 +45,7 @@ function App() {
           <Link to="/bookings">Bookings</Link>
         </div>
 
-        <div className="nav-right">
+        {/* <div className="nav-right">
           {user ? (
             <>
               <span className="user-email">
@@ -62,20 +62,20 @@ function App() {
               <Link to="/register">Sign Up</Link>
             </>
           )}
-        </div>
+        </div> */}
     </nav>
         {/* Left: Links */}
-        {/* <div style={{ display: 'flex', gap: '24px' }}>
+        <div style={{ display: 'flex', gap: '24px' }}>
           <Link to="/rooms" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>
             Rooms
           </Link>
           <Link to="/bookings" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>
             Bookings
           </Link>
-        </div> */}
+        </div>
 
         {/* Right: Auth controls */}
-       {/*  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           {user ? (
             <>
               {user.role === 'ADMIN' && (
@@ -110,19 +110,16 @@ function App() {
               </Link>
             </>
           )}
-        </div> */}
-      {/* </nav> */}
+        </div>
+      </nav>
 
       <Routes>
         {/* Public routes */}
         <Route path="/rooms" element={<RoomsPage />} />
 
-        {/* <Route element={<ProtectedRoute />}> Temporarily disabiing logging to test booking page*/}
+        {/* <Route element={<ProtectedRoute />}> */}
           <Route path="/book/:id" element={<BookRoomPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
-        
-
-
         {/* </Route> */}
 
         {/* Auth routes */}
