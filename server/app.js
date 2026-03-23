@@ -22,14 +22,14 @@ app.use((req, res, next) => {
     next()
 })
 
-//app.use('/api', apiRouter)
+//app.use('/api', apiRouter) 
 app.use('/api/guests', guestRoutes)
 app.use("/api/rooms", roomRoutes);
 app.use("/api/reservations", reservationRoutes);
 
 
   //tables
-  // create project tables
+  // create project tables -- needs to be updated so table is not created every single time node app.js is ran
 db.serialize(() => {
 
   db.run(`
