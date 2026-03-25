@@ -5,6 +5,7 @@ function BookRoomPage() {
   const { id } = useParams();
 
   const [room, setRoom] = useState(null);
+  const today = new Date().toISOString().split("T")[0];
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
@@ -123,6 +124,7 @@ function BookRoomPage() {
           type='date' 
           id='startDateInput' 
           name='startDate'
+          min = {today}
           required
         /><br/>
 
@@ -131,6 +133,7 @@ function BookRoomPage() {
           type='date' 
           id='endDateInput' 
           name='endDate'
+          min ={today}
           required
         /><br/>
       </div>
