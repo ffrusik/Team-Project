@@ -48,9 +48,29 @@ db.serialize(() => {
   CREATE TABLE IF NOT EXISTS Room (
     RoomID INTEGER PRIMARY KEY AUTOINCREMENT,
     Type TEXT,
-    PricePerNight REAL
+    PricePerNight REAL,
+    Description TEXT,
+    Capacity INTEGER,
+    Facilities TEXT
   )
   `)
+  db.run(`ALTER TABLE Room ADD COLUMN Description TEXT`, (err) => {
+  if (err && !err.message.includes("duplicate column name")) {
+    console.error(err.message);
+  }
+});
+
+db.run(`ALTER TABLE Room ADD COLUMN Capacity INTEGER`, (err) => {
+  if (err && !err.message.includes("duplicate column name")) {
+    console.error(err.message);
+  }
+});
+
+db.run(`ALTER TABLE Room ADD COLUMN Facilities TEXT`, (err) => {
+  if (err && !err.message.includes("duplicate column name")) {
+    console.error(err.message);
+  }
+});
 
   db.run(`
   CREATE TABLE IF NOT EXISTS Reservation (

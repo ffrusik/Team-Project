@@ -27,11 +27,11 @@ router.get("/:id", async (req, res) => {
 // CREATE room
 router.post("/", async (req, res) => {
 
-  const { Type, PricePerNight } = req.body;
+  const { Type, PricePerNight,Description,Capacity,Facilities} = req.body;
 
   const result = await runQuery(
-    "INSERT INTO Room (Type, PricePerNight) VALUES (?, ?)",
-    [Type, PricePerNight]
+    "INSERT INTO Room (Type, PricePerNight,Description,Capacity,Facilities) VALUES (?, ?,?,?,?)",
+    [Type, PricePerNight,Description,Capacity,Facilities]
   );
 
   res.json({
@@ -45,13 +45,13 @@ router.post("/", async (req, res) => {
 // UPDATE room
 router.put("/:id", async (req, res) => {
 
-  const { Type, PricePerNight } = req.body;
+  const { Type, PricePerNight,Description,Capacity,Facilities } = req.body;
 
   await runQuery(
     `UPDATE Room
-     SET Type=?, PricePerNight=?
+     SET Type=?, PricePerNight=?,Description=?,Capacity=?,Facilities=?
      WHERE RoomID=?`,
-    [Type, PricePerNight, req.params.id]
+    [Type, PricePerNight,Description,Capacity,Facilities, req.params.id]
   );
 
   res.json({ message: "Room updated" });
