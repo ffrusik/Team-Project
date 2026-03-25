@@ -10,6 +10,9 @@ function DashboardRoomsPage() {
   const [formData, setFormData] = useState({
     Type: "",
     PricePerNight: "",
+    Description: "",
+    Capacity: "",
+    Facilities: "",
   });
 
   useEffect(() => {
@@ -60,6 +63,9 @@ function DashboardRoomsPage() {
         body: JSON.stringify({
           Type: formData.Type,
           PricePerNight: Number(formData.PricePerNight),
+          Description: formData.Description,
+          Capacity: Number(formData.Capacity),
+          Facilities: formData.Facilities,
         }),
       });
 
@@ -74,6 +80,9 @@ function DashboardRoomsPage() {
       setFormData({
         Type: "",
         PricePerNight: "",
+        Description: "",
+        Capacity: "",
+        Facilities: "",
       });
 
       alert(editingRoom && editingRoom.RoomID ? "Room updated!" : "Room added!");
@@ -110,6 +119,9 @@ function DashboardRoomsPage() {
     setFormData({
       Type: room.Type || "",
       PricePerNight: room.PricePerNight || "",
+      Description: room.Description || "",
+      Capacity: room.Capacity || "",
+      Facilities: room.Facilities || "",
     });
   };
 
@@ -151,6 +163,42 @@ function DashboardRoomsPage() {
               step="0.01"
             />
           </div>
+          <div className="form-group">
+          <label htmlFor="Description">Description</label>
+          <input
+            type="text"
+            id="Description"
+            name="Description"
+            value={formData.Description}
+            onChange={handleFormChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="Capacity">Capacity</label>
+          <input
+            type="number"
+            id="Capacity"
+            name="Capacity"
+            value={formData.Capacity}
+            onChange={handleFormChange}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="Facilities">Facilities</label>
+          <input
+            type="text"
+            id="Facilities"
+            name="Facilities"
+            value={formData.Facilities}
+            onChange={handleFormChange}
+            placeholder="Free Wi-Fi, TV, Ensuite Bathroom"
+            required
+          />
+        </div>
 
           <div className="form-group">
             <button type="submit">
@@ -174,6 +222,9 @@ function DashboardRoomsPage() {
             setFormData({
               Type: "",
               PricePerNight: "",
+              Description: "",
+              Capacity: "",
+              Facilities: "",
             });
           }}
           style={{
@@ -195,13 +246,16 @@ function DashboardRoomsPage() {
             <th>ID</th>
             <th>Type</th>
             <th>Price Per Night</th>
+            <th>Description</th>
+            <th>Capacity</th>
+            <th>Facilities</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {rooms.length === 0 ? (
             <tr>
-              <td colSpan="4" style={{ textAlign: "center", padding: "40px" }}>
+              <td colSpan="7" style={{ textAlign: "center", padding: "40px" }}>
                 No rooms found
               </td>
             </tr>
@@ -211,6 +265,9 @@ function DashboardRoomsPage() {
                 <td>{room.RoomID}</td>
                 <td>{room.Type}</td>
                 <td>€{room.PricePerNight}</td>
+                <td>{room.Description || "-"}</td>
+                <td>{room.Capacity || "-"}</td>
+                <td>{room.Facilities || "-"}</td>
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(room)}>
                     Edit

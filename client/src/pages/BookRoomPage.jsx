@@ -11,10 +11,11 @@ function BookRoomPage() {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        const token = localStorage.getItem('token');
+        /* const token = localStorage.getItem('token');
         const res = await fetch(`/api/rooms/${id}`, {
-          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
-        });
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {} */
+          const res = await fetch(`http://localhost:5000/api/rooms/${id}`);
+      
 
         if (!res.ok) {
           const err = await res.json();
@@ -37,25 +38,42 @@ function BookRoomPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const token = localStorage.getItem('token');
+    /* const token = localStorage.getItem('token');
     if (!token) {
       alert('Please log in to book a room');
+      return; */
+  
+
+    const today = new Date().toISOString().split("T")[0];
+
+    const startDate = e.target.startDate.value;
+    const endDate = e.target.endDate.value;
+
+    if (startDate < today) {
+      alert("Cannot book in the past");
       return;
-    }
+  }
+
+  if (endDate <= startDate) {
+    alert("End date must be after start date");
+    return;
+  }
+    
 
     const formDataObj = {
-    roomNumber: Number(id),
-    numberOfGuests: Number(e.target.numberOfGuests.value),
-    startDate: e.target.startDate.value,
-    endDate: e.target.endDate.value,
+    GuestID: Number(e.target.guestId.value),
+    RoomID: Number(id),
+    StartDate: e.target.startDate.value,
+    EndDate: e.target.endDate.value,
+    NumberOfGuests: Number(e.target.numberOfGuests.value),
   };
 
     try {
-      const response = await fetch('/api/reservations', {
+      const response = await fetch('http://localhost:5000/api/reservations', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
+          
         },
         body: JSON.stringify(formDataObj)
       })

@@ -43,7 +43,9 @@ export default function RoomsPage() {
 
             <div className="room-content">
               <h3>{room.Type} Room</h3>
-              <p>Room ID: {room.RoomID}</p>
+              <p><strong>Capacity:</strong> {room.Capacity || "N/A"} guests</p>
+              <p>{room.Description || "No description available."}</p>
+              <p><strong>Facilities:</strong> {room.Facilities || "No facilities listed."}</p>
               <p className="price">€{room.PricePerNight} / night</p>
 
               <Link className="book-btn" to={`/book/${room.RoomID}`}>
