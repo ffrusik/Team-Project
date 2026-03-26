@@ -58,6 +58,18 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "End date must be after start date" });
     }
 
+    const capacity = await getQuery(
+      "SELECT Capacity FROM room WHERE RoomID = ?",
+      [RoomID]
+    );
+
+    console.log(capacity.Capacity)
+    console.log(NumberOfGuests)
+
+    if (NumberOfGuests > capacity.Capacity) {
+      return res.status(400).json({ error: "Number of guests exceeds room capacity" });
+    }
+
     const guest = await getQuery(
       "SELECT * FROM Guest WHERE GuestID = ?",
       [GuestID]

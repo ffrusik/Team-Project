@@ -1,8 +1,8 @@
 /*code to add an extra */
-import { useEffect, useState} from 'react';
-import {useNavigate} from 'react';
+import {  useState} from 'react';
+import {useNavigate} from 'react-router-dom';
 
-function AddExtra(){
+function AddExtra() {
 
     const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ function AddExtra(){
         navigate('/admin/dashboard');
         
 
-       /*  fetch('/api/extras', {
+       fetch('/api/extras', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ function AddExtra(){
         .catch(err => {
             console.error(err);
             alert('Error adding extra.');
-        }); */
+        });
     };
 
     return (
