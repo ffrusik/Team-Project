@@ -10,25 +10,12 @@ export default function RoomsPage() {
       .then((data) => setRooms(data));
   }, []);
 
- /*  return (
-    <div>
-      <h1>Rooms</h1>
-
-      {rooms.map((room) => (
-        <div key={room.RoomID}>
-          <h3>Room ID: {room.RoomID}</h3>
-          <p>Type: {room.Type}</p>
-          <p>Price: €{room.PricePerNight}</p>
-          <Link to={`/book/${room.RoomID}`}>Book</Link>
-        </div>
-      ))}
-    </div>
-  ); */
+ 
   return (
   <>
     <section className="hero">
       <div className="hero-content">
-        <h1>Luxury Hotel</h1>
+        <h1>Le Hotel</h1>
         <p>Elegant rooms and seamless booking.</p>
       </div>
     </section>

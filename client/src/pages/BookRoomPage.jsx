@@ -148,14 +148,7 @@ function BookRoomPage() {
         <label htmlFor='cvcInput'>CVC: </label>
         <input type='password' id='cvcInput' name='cvc'></input><br></br>
       </div>
-{/* 
-      {room && !loading && (
-        <div id='roomDetailsDiv'>
-          <p>Room ID: {room.RoomID}</p>
-          <p>Type: {room.Type}</p>
-          <p>Price per night: €{room.PricePerNight}</p>
-        </div>
-      )} */}
+
 
       <button type='submit'>Book</button>
       </form>
