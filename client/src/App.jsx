@@ -9,6 +9,7 @@ import DashboardRoomsPage from "./pages/DashboardRoomsPage.jsx";
 import DashboardGuestsPage from "./pages/DashboardGuestsPage";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
+import AddExtra from "./pages/AddExtra.jsx";
 //import DashboardReservationsPage from "./pages/DashboardReseravtionsPage.jsx";
 import "./App.css"
 
@@ -75,6 +76,8 @@ function App() {
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/dashboard/rooms" element={<DashboardRoomsPage />} />
           <Route path="/admin/dashboard/guests" element={<DashboardGuestsPage />} />
+          <Route path="/admin/dashboard/extras" element={<AddExtra />} />
+
         {/* </Route> */}
 
         {/* Catch-all */}

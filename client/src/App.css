@@ -371,3 +371,46 @@ tr:hover {
   margin-bottom: 8px;
   color: #333;
 }
+.dashboard-page {
+  max-width: 1100px;
+  margin: 50px auto;
+  padding: 0 24px;
+}
+
+.dashboard-page h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 3rem;
+  color: #0f1b2d;
+  margin-bottom: 12px;
+}
+
+.dashboard-subtitle {
+  color: #6b7280;
+  font-size: 1.05rem;
+  margin-bottom: 32px;
+}
+
+.dashboard-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.dashboard-action-card {
+  display: block;
+  background: white;
+  padding: 28px 24px;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  color: #0f1b2d !important;
+  font-weight: 700;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+ .dashboard-action-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  color: #c8a96b !important;
+} 

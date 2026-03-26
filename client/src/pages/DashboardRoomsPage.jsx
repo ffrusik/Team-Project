@@ -195,7 +195,6 @@ function DashboardRoomsPage() {
             name="Facilities"
             value={formData.Facilities}
             onChange={handleFormChange}
-            placeholder="Free Wi-Fi, TV, Ensuite Bathroom"
             required
           />
         </div>
