@@ -1,5 +1,5 @@
 /*code to add an extra */
-import { useState} from 'react';
+import { useEffect, useState} from 'react';
 import {useNavigate} from 'react';
 
 function AddExtra(){
@@ -21,8 +21,13 @@ function AddExtra(){
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        
+        alert(' Backend not ready guys.');
+        console.log(extra);
+        navigate('/admin/dashboard');
+        
 
-        fetch('/api/extras', {
+       /*  fetch('/api/extras', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -40,14 +45,15 @@ function AddExtra(){
         .catch(err => {
             console.error(err);
             alert('Error adding extra.');
-        });
+        }); */
     };
 
     return (
-        <div>
-            <h1>Add Extra</h1>
+        <main className="page-container">
+            <div className="form-wrapper">
+                <h1>Add Extra</h1>
 
-            <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit}>
                 <div>
                     <label>Name:</label>
                     <input 
@@ -55,7 +61,16 @@ function AddExtra(){
                      name="name"
                      value={extra.name}
                      onChange={handleChange}
-                     placeholder="Cup of Tea"
+                     required
+                    />
+                </div>
+                <div>
+                    <label>Description:</label>
+                    <input 
+                     type="text"
+                     name="description"
+                     value={extra.description}
+                     onChange={handleChange}
                      required
                     />
                 </div>
@@ -67,7 +82,6 @@ function AddExtra(){
                      name="price"
                      value={extra.price}
                      onChange={handleChange}
-                     placeholder="5"
                      required
                     />
         </div>
@@ -75,6 +89,7 @@ function AddExtra(){
         <button type="submit">Add Extra</button>
     </form>
     </div>
+        </main>
     );
 }
 

@@ -97,8 +97,9 @@ function BookRoomPage() {
   if (error) return <div style={{ padding: '50px', color: 'red', textAlign: 'center' }}>Error: {error}</div>
 
   return (
-    <div>
-      <h1>Book Room #{id}</h1>
+    <main className ="page-container">
+    <div className ="form-wrapper">
+      <h1>Book Room </h1>
       <form onSubmit={handleSubmit}>
       <div>
         <p>Booking details</p>
@@ -148,17 +149,11 @@ function BookRoomPage() {
         <input type='password' id='cvcInput' name='cvc'></input><br></br>
       </div>
 
-      {room && !loading && (
-        <div id='roomDetailsDiv'>
-          <p>Room ID: {room.RoomID}</p>
-          <p>Type: {room.Type}</p>
-          <p>Price per night: €{room.PricePerNight}</p>
-        </div>
-      )}
 
       <button type='submit'>Book</button>
       </form>
     </div>
+    </main>
   );
 }
 

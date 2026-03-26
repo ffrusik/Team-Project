@@ -9,6 +9,7 @@ import DashboardRoomsPage from "./pages/DashboardRoomsPage.jsx";
 import DashboardGuestsPage from "./pages/DashboardGuestsPage";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
+import AddExtra from "./pages/AddExtra.jsx";
 //import DashboardReservationsPage from "./pages/DashboardReseravtionsPage.jsx";
 import "./App.css"
 
@@ -22,27 +23,16 @@ function App() {
 
   return (
     <>  
-      {/* <nav style={{
-        padding: '16px 32px',
-        background: 'linear-gradient(90deg, #9074e2, #d8b4fe)',
-        borderBottom: '1px solid linear-gradient(90deg, #7758d4, #7d22df)',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        position: 'sticky',
-        top: 0,
-        zIndex: 1000,
-        boxShadow: '0 5px 10px rgba(0,0,0,0.15)',
-        borderRadius: '0 0 12px 12px',
-      }}> */}
+  
       <nav className="navbar">
         <div className="nav-left">
           <Link to="/rooms" className="logo">
-            Luxury Hotel
+            Le Hotel
           </Link>
 
           <Link to="/rooms">Rooms</Link>
           <Link to="/bookings">Bookings</Link>
+          <Link to="/admin/dashboard">Admin</Link>
         </div>
 
         <div className="nav-right">
@@ -64,54 +54,7 @@ function App() {
           )}
         </div>
     </nav>
-        {/* Left: Links */}
-        {/* <div style={{ display: 'flex', gap: '24px' }}>
-          <Link to="/rooms" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>
-            Rooms
-          </Link>
-          <Link to="/bookings" style={{ textDecoration: 'none', color: '#333', fontWeight: '500' }}>
-            Bookings
-          </Link>
-        </div> */}
-
-        {/* Right: Auth controls */}
-       {/*  <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          {user ? (
-            <>
-              {user.role === 'ADMIN' && (
-                <Link to="/admin/dashboard" style={{ color: '#007bff', textDecoration: 'none', fontWeight: '500' }}>
-                  Admin Dashboard
-                </Link>
-              )}
-              <span style={{ fontWeight: '500' }}>
-                Signed in as {user.email}
-              </span>
-              <button
-                onClick={logout}
-                style={{
-                  padding: '8px 16px',
-                  background: '#dc3545',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                }}
-              >
-                Sign Out
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/login" style={{ color: '#007bff', textDecoration: 'none', fontWeight: '500' }}>
-                Sign In
-              </Link>
-              <Link to="/register" style={{ color: '#007bff', textDecoration: 'none', fontWeight: '500' }}>
-                Sign Up
-              </Link>
-            </>
-          )}
-        </div> */}
-      {/* </nav> */}
+  
 
       <Routes>
         {/* Public routes */}
@@ -133,6 +76,8 @@ function App() {
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/dashboard/rooms" element={<DashboardRoomsPage />} />
           <Route path="/admin/dashboard/guests" element={<DashboardGuestsPage />} />
+          <Route path="/admin/dashboard/extras" element={<AddExtra />} />
+
         {/* </Route> */}
 
         {/* Catch-all */}
