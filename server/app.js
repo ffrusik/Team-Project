@@ -22,10 +22,9 @@ app.use((req, res, next) => {
     next()
 })
 
-//app.use('/api', apiRouter) 
-app.use('/api/guests', guestRoutes)
-app.use("/api/rooms", roomRoutes);
-app.use("/api/reservations", reservationRoutes);
+app.use('/api/', guestRoutes)  // guests
+app.use("/api/", roomRoutes);  // rooms
+app.use("/api/", reservationRoutes);  // reservations
 
 
   //tables
@@ -41,6 +40,7 @@ db.serialize(() => {
     Password TEXT,
     Phone TEXT,
     Eircode TEXT
+    Role TEXT
   )
   `)
 

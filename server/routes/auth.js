@@ -1,18 +1,8 @@
 import express from 'express'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-//import { PrismaClient } from '@prisma/client'
-import { Pool } from 'pg'
-//import { PrismaPg } from '@prisma/adapter-pg'
 
 const connectionString = process.env.DATABASE_URL
-const pool = new Pool({ connectionString })
-const adapter = new PrismaPg(pool)
-
-//const prisma = new PrismaClient({
-  //adapter,
-  lo//g: ['query', 'info', 'warn', 'error'],
-//})
 
 const router = express.Router()
 
@@ -50,18 +40,23 @@ router.post('/register', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
-    const user = await prisma.guest.create({
-      data: {
-        guestName: guestName || email.split('@')[0],
-        email,
-        password: hashedPassword,
-        phoneNumber,
-        town: town || null,     // optional
-        county: county || null, // optional
-        eirCode,
-        role: 'USER',           // Prisma maps this to Role.USER
-      },
-    })
+    /* 
+    GuestID INTEGER PRIMARY KEY AUTOINCREMENT,
+    FirstName TEXT,
+    LastName TEXT,
+    Email TEXT,
+    Password TEXT,
+    Phone TEXT,
+    Eircode TEXT,
+    Role TEXT
+    */
+
+    const user = await runQuery(
+        `INSERT INTO Guest
+         (FirstName, LastName, Email, Password, Phone, Eircode, Role)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [FirstName, LastName, Email, hashedPassword, Phone, Eircode, 'USER']
+      );
 
     const token = jwt.sign(
       { userId: user.id, 
@@ -97,21 +92,25 @@ router.post('/login', async (req, res) => {
   }
 
   try {
-    const user = await prisma.guest.findUnique({ where: { email } })
-    if (!user || !user.password) {
+    const user = await getQuery(
+      "SELECT * FROM Guest WHERE Email = ?",
+      [email]
+    );
+
+    if (!user || !user.Password) {
       return res.status(401).json({ error: 'Invalid credentials' })
     }
 
-    const valid = await bcrypt.compare(password, user.password)
+    const valid = await bcrypt.compare(password, user.Password)
     if (!valid) {
       return res.status(401).json({ error: 'Invalid credentials' })
     }
 
     const token = jwt.sign(
-      { 
-        userId: user.id, 
-        email: user.email, 
-        role: user.role 
+      {
+        userId: user.GuestID,
+        email: user.Email,
+        role: user.Role
       },
       JWT_SECRET,
       { expiresIn: '7d' }
@@ -120,10 +119,10 @@ router.post('/login', async (req, res) => {
     res.json({
       token,
       user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-        guestName: user.guestName,
+        id: user.GuestID,
+        email: user.Email,
+        role: user.Role,
+        guestName: user.GuestName,
       },
     })
   } catch (error) {

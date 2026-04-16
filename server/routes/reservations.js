@@ -2,9 +2,46 @@ import express from "express";
 import { runQuery, getQuery, allQuery } from "../database.js";
 //errors are to help understand where a problem is coming from
 const router = express.Router();
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+// Verification and authentication
+const JWT_SECRET = process.env.JWT_SECRET
+
+if (!JWT_SECRET) {
+  console.error('JWT_SECRET not set')
+  process.exit(1)
+}
+
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'No token provided' });
+  }
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+   if (err) {
+      return res.status(403).json({ error: 'Invalid or expired token' });
+    }
+    req.user = user; // { userId, email, role }
+   next();
+  });
+};
+
+// Middleware: Only admins
+const requireAdmin = (req, res, next) => {
+  if (!req.user || req.user.role !== 'ADMIN') {
+    return res.status(403).json({ error: 'Admin access required' });
+  }
+  next();
+};
 
 // GET all reservations
-router.get("/", async (req, res) => {
+router.get("/admin/reservations", authenticateToken, requireAdmin, async (req, res) => {
   try {
     const reservations = await allQuery("SELECT * FROM Reservation");
     res.json(reservations);
@@ -14,7 +51,7 @@ router.get("/", async (req, res) => {
 });
 
 // GET one reservation
-router.get("/:id", async (req, res) => {
+router.get("/admin/reservations/:id", authenticateToken, requireAdmin, async (req, res) => {
   try {
     const reservation = await getQuery(
       "SELECT * FROM Reservation WHERE ResID = ?",
@@ -32,7 +69,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // CREATE reservation
-router.post("/", async (req, res) => {
+router.post("/admin/reservations", authenticateToken, requireAdmin, async (req, res) => {
   try {
     const {
       GuestID,
