@@ -1,11 +1,12 @@
 import express from "express";
 import { runQuery, getQuery, allQuery } from "../database.js";
 //errors are to help understand where a problem is coming from
-const router = express.Router();
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
 dotenv.config()
+
+const router = express.Router();
 
 // Verification and authentication
 const JWT_SECRET = process.env.JWT_SECRET
@@ -163,7 +164,7 @@ router.post("/admin/reservations", authenticateToken, requireAdmin, async (req, 
 });
 
 // UPDATE reservation
-router.put("/:id", async (req, res) => {
+router.put("/reservations/:id", async (req, res) => {
   try {
     const {
       GuestID,
@@ -254,7 +255,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // DELETE reservation
-router.delete("/:id", async (req, res) => {
+router.delete("/reservations/:id", async (req, res) => {
   try {
     const reservation = await getQuery(
       "SELECT * FROM Reservation WHERE ResID = ?",
@@ -277,7 +278,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 // CONFIRM reservation
-router.put("/:id/confirm", async (req, res) => {
+router.put("/reservations/:id/confirm", async (req, res) => {
   try {
     const reservation = await getQuery(
       "SELECT * FROM Reservation WHERE ResID = ?",
@@ -300,7 +301,7 @@ router.put("/:id/confirm", async (req, res) => {
 });
 
 // REJECT reservation
-router.put("/:id/reject", async (req, res) => {
+router.put("/reservations/:id/reject", async (req, res) => {
   try {
     const reservation = await getQuery(
       "SELECT * FROM Reservation WHERE ResID = ?",

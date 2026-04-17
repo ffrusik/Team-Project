@@ -1,6 +1,8 @@
 import express from 'express'
+import { runQuery, getQuery, allQuery } from "../database.js";
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+
 
 const connectionString = process.env.DATABASE_URL
 
@@ -33,7 +35,10 @@ router.post('/register', async (req, res) => {
   }
 
   try {
-    const existing = await prisma.guest.findUnique({ where: { email } })
+    const existing = await runQuery(
+        `SELECT * FROM Guest WHERE Email = ?`,
+        [email]
+      );
     if (existing) {
       return res.status(409).json({ error: 'Email already exists' })
     }
