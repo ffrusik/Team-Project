@@ -51,6 +51,15 @@ router.get("/admin/reservations", authenticateToken, requireAdmin, async (req, r
   }
 });
 
+router.get("/reservations", authenticateToken, async (req, res) => {
+  try {
+    const reservations = await allQuery("SELECT * FROM Reservation WHERE GuestID = ?", [req.user.userId]);
+    res.json(reservations);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // GET one reservation
 router.get("/admin/reservations/:id", authenticateToken, requireAdmin, async (req, res) => {
   try {
@@ -70,10 +79,9 @@ router.get("/admin/reservations/:id", authenticateToken, requireAdmin, async (re
 });
 
 // CREATE reservation
-router.post("/admin/reservations", authenticateToken, requireAdmin, async (req, res) => {
+router.post("/reservations", authenticateToken, requireAdmin, async (req, res) => {
   try {
     const {
-      GuestID,
       RoomID,
       StartDate,
       EndDate,
@@ -83,8 +91,9 @@ router.post("/admin/reservations", authenticateToken, requireAdmin, async (req, 
     } = req.body;
 
     const today = new Date().toISOString().split("T")[0];
+    const GuestID = req.user.userId;
 
-    if (!GuestID || !RoomID || !StartDate || !EndDate || !NumberOfGuests) {
+    if (!RoomID || !StartDate || !EndDate || !NumberOfGuests) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -100,9 +109,6 @@ router.post("/admin/reservations", authenticateToken, requireAdmin, async (req, 
       "SELECT Capacity FROM room WHERE RoomID = ?",
       [RoomID]
     );
-
-    console.log(capacity.Capacity)
-    console.log(NumberOfGuests)
 
     if (NumberOfGuests > capacity.Capacity) {
       return res.status(400).json({ error: "Number of guests exceeds room capacity" });
@@ -164,7 +170,7 @@ router.post("/admin/reservations", authenticateToken, requireAdmin, async (req, 
 });
 
 // UPDATE reservation
-router.put("/reservations/:id", async (req, res) => {
+router.put("/reservations/:id", authenticateToken, async (req, res) => {
   try {
     const {
       GuestID,
@@ -255,7 +261,7 @@ router.put("/reservations/:id", async (req, res) => {
 });
 
 // DELETE reservation
-router.delete("/reservations/:id", async (req, res) => {
+router.delete("/reservations/:id", authenticateToken, async (req, res) => {
   try {
     const reservation = await getQuery(
       "SELECT * FROM Reservation WHERE ResID = ?",
@@ -301,7 +307,7 @@ router.put("/reservations/:id/confirm", async (req, res) => {
 });
 
 // REJECT reservation
-router.put("/reservations/:id/reject", async (req, res) => {
+router.put("/reservations/:id/reject", authenticateToken, async (req, res) => {
   try {
     const reservation = await getQuery(
       "SELECT * FROM Reservation WHERE ResID = ?",

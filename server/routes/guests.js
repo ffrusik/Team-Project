@@ -4,6 +4,8 @@ import { runQuery, getQuery, allQuery } from "../database.js";
 import jwt from 'jsonwebtoken'
 import dotenv from 'dotenv'
 
+import bcrypt from "bcryptjs"
+
 dotenv.config()
 
 const router = express.Router();
@@ -43,14 +45,14 @@ const requireAdmin = (req, res, next) => {
 
 
 // GET all guests
-router.get("/guests/", async (req, res) => {
+router.get("/guests/", authenticateToken, requireAdmin, async (req, res) => {
   const guests = await allQuery("SELECT * FROM Guest");
   res.json(guests);
 });
 
 
 // GET one guest
-router.get("/guests/:id", async (req, res) => {
+router.get("/guests/:id", authenticateToken, requireAdmin, async (req, res) => {
   const guest = await getQuery(
     "SELECT * FROM Guest WHERE GuestID=?",
     [req.params.id]
@@ -61,7 +63,7 @@ router.get("/guests/:id", async (req, res) => {
 
 
 // CREATE guest
-router.post("/guests/", async (req, res) => {
+router.post("/guests/", authenticateToken, requireAdmin, async (req, res) => {
 
   const {
     FirstName,
@@ -72,11 +74,13 @@ router.post("/guests/", async (req, res) => {
     Eircode
   } = req.body;
 
+  const hashedPassword = await bcrypt.hash(Password, 10)
+
   const result = await runQuery(
     `INSERT INTO Guest
     (FirstName, LastName, Email, Password, Phone, Eircode)
     VALUES (?, ?, ?, ?, ?, ?)`,
-    [FirstName, LastName, Email, Password, Phone, Eircode]
+    [FirstName, LastName, Email, hashedPassword, Phone, Eircode]
   );
 
   res.json({
@@ -88,7 +92,7 @@ router.post("/guests/", async (req, res) => {
 
 
 // UPDATE guest
-router.put("/guests/:id", async (req, res) => {
+router.put("/guests/:id", authenticateToken, requireAdmin, async (req, res) => {
 
   const {
     FirstName,
@@ -99,11 +103,13 @@ router.put("/guests/:id", async (req, res) => {
     Eircode
   } = req.body;
 
+  const hashedPassword = await bcrypt.hash(Password, 10)
+
   await runQuery(
     `UPDATE Guest
      SET FirstName=?, LastName=?, Email=?, Password=?, Phone=?, Eircode=?
      WHERE GuestID=?`,
-    [FirstName, LastName, Email, Password, Phone, Eircode, req.params.id]
+    [FirstName, LastName, Email, hashedPassword, Phone, Eircode, req.params.id]
   );
 
   res.json({ message: "Guest updated" });
@@ -112,7 +118,7 @@ router.put("/guests/:id", async (req, res) => {
 
 
 // DELETE guest
-router.delete("/guests/:id", async (req, res) => {
+router.delete("/guests/:id", authenticateToken, requireAdmin, async (req, res) => {
 
   await runQuery(
     "DELETE FROM Guest WHERE GuestID=?",

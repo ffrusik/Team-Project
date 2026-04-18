@@ -8,7 +8,10 @@ function BookingsPage() {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/reservations');
+        const token = localStorage.getItem('token');
+        const res = await fetch('http://localhost:5000/api/reservations', {
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+        });
 
         const data = await res.json();
 

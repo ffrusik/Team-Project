@@ -32,7 +32,7 @@ app.use("/api/", reservationRoutes);  // reservations
 
   //tables
   // create project tables -- needs to be updated so table is not created every single time node app.js is ran
-db.serialize(() => {
+db.serialize(async () => {
 
   db.run(`
   CREATE TABLE IF NOT EXISTS Guest (
@@ -117,7 +117,7 @@ db.run(`ALTER TABLE Room ADD COLUMN Facilities TEXT`, (err) => {
   )
   `)
 
-  const hashedPassword = bcrypt.hash(process.env.ADMIN_PASSWORD, 10)
+  const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10)
 
   db.run(`
   INSERT INTO Guest (FirstName, LastName, Email, Password, Phone, Eircode, Role)
@@ -125,8 +125,7 @@ db.run(`ALTER TABLE Room ADD COLUMN Facilities TEXT`, (err) => {
   WHERE NOT EXISTS (
     SELECT 1 FROM Guest WHERE Email = ?
   )
-`, ['Admin', 'Admin', 'admin@email.com', hashedPassword, '1234567890', 'F92U8WT', 'ADMIN', 'admin@email.com'
-]);
+`, ['Admin', 'Admin', 'admin@email.com', hashedPassword, '1234567890', 'F92U8WT', 'ADMIN', 'admin@email.com']);
 
 })
 //})

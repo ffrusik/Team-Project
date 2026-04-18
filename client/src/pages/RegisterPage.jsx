@@ -6,7 +6,8 @@ import { useAuth } from '../context/AuthContext'
 function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [guestName, setGuestName] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [phoneNumber, setPhoneNumber] = useState('')
   const [town, setTown] = useState('')
   const [county, setCounty] = useState('')
@@ -21,7 +22,8 @@ function RegisterPage() {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, guestName, phoneNumber, town, county, eirCode }),
+        body: JSON.stringify({ email, password, firstName, lastName, phoneNumber, town, county, eirCode }),
+
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
@@ -34,6 +36,17 @@ function RegisterPage() {
     }
   };
 
+  /* 
+    GuestID INTEGER PRIMARY KEY AUTOINCREMENT,
+    FirstName TEXT,
+    LastName TEXT,
+    Email TEXT,
+    Password TEXT,
+    Phone TEXT,
+    Eircode TEXT,
+    Role TEXT
+    */
+
   return (
     <div style={{ maxWidth: '400px', margin: '80px auto', padding: '20px', border: '1px solid #ddd', borderRadius: '8px', background: 'white' }}>
       <h1>Register</h1>
@@ -41,9 +54,16 @@ function RegisterPage() {
       <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Name"
-          value={guestName}
-          onChange={e => setGuestName(e.target.value)}
+          placeholder="First name"
+          value={firstName}
+          onChange={e => setFirstName(e.target.value)}
+          style={{ width: '100%', padding: '10px', margin: '10px 0' }}
+        />
+        <input
+          type="text"
+          placeholder="Last name"
+          value={lastName}
+          onChange={e => setLastName(e.target.value)}
           style={{ width: '100%', padding: '10px', margin: '10px 0' }}
         />
         <input

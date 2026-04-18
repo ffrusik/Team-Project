@@ -13,8 +13,8 @@ import AddExtra from "./pages/AddExtra.jsx";
 //import DashboardReservationsPage from "./pages/DashboardReseravtionsPage.jsx";
 import "./App.css"
 
-//import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
-//import ProtectedRoute from "./components/ProtectedRoute.jsx"
+import ProtectedAdminRoute from "./components/ProtectedAdminRoute"
+import ProtectedRoute from "./components/ProtectedRoute.jsx"
 
 import { useAuth } from "./context/AuthContext.jsx"
 
@@ -60,25 +60,25 @@ function App() {
         {/* Public routes */}
         <Route path="/rooms" element={<RoomsPage />} />
 
-        {/* <Route element={<ProtectedRoute />}> Temporarily disabiing logging to test booking page*/}
+        <Route element={<ProtectedRoute />}>
           <Route path="/book/:id" element={<BookRoomPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
         
 
 
-        {/* </Route> */}
+        </Route>
 
         {/* Auth routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         
-        {/* <Route element={<ProtectedAdminRoute />}> */}
+        <Route element={<ProtectedAdminRoute />}>
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/dashboard/rooms" element={<DashboardRoomsPage />} />
           <Route path="/admin/dashboard/guests" element={<DashboardGuestsPage />} />
           <Route path="/admin/dashboard/extras" element={<AddExtra />} />
 
-        {/* </Route> */}
+        </Route>
 
         {/* Catch-all */}
         <Route path="*" element={<Navigate to="/rooms" replace />} />
