@@ -4,6 +4,7 @@ import { Routes, Route, Link, Navigate } from "react-router-dom";
 import RoomsPage from "./pages/RoomsPage.jsx";
 import BookRoomPage from "./pages/BookRoomPage.jsx";
 import BookingsPage from "./pages/BookingsPage.jsx";
+import AdminBookingsPage from "./pages/AdminBookingsPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import DashboardRoomsPage from "./pages/DashboardRoomsPage.jsx";
 import DashboardGuestsPage from "./pages/DashboardGuestsPage";
@@ -63,6 +64,7 @@ function App() {
         {/* <Route element={<ProtectedRoute />}> Temporarily disabiing logging to test booking page*/}
           <Route path="/book/:id" element={<BookRoomPage />} />
           <Route path="/bookings" element={<BookingsPage />} />
+          
         
 
 
@@ -77,6 +79,7 @@ function App() {
           <Route path="/admin/dashboard/rooms" element={<DashboardRoomsPage />} />
           <Route path="/admin/dashboard/guests" element={<DashboardGuestsPage />} />
           <Route path="/admin/dashboard/extras" element={<AddExtra />} />
+          <Route path="/admin/dashboard/bookings" element={<AdminBookingsPage />} />
 
         {/* </Route> */}
 

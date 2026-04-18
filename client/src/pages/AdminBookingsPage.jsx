@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-function BookingsPage() {
+function AdminBookingsPage() {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -8,7 +8,7 @@ function BookingsPage() {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/reservations?GuestID=2');//will only return bookings for guest 1 or 2( temp till login is completed)
+        const res = await fetch('http://localhost:5000/api/reservations');
 
         const data = await res.json();
 
@@ -28,16 +28,16 @@ function BookingsPage() {
     fetchBookings();
   }, []);
 
-  if (loading) return <div>Loading your bookings...</div>;
+  if (loading) return <div>Loading all bookings...</div>;
 
   if (error) return <div style={{ color: 'red' }}>Error: {error}</div>;
 
   return (
     <div>
-      <h1>My Bookings</h1>
+      <h1>All Bookings</h1>
 
       {bookings.length === 0 ? (
-        <p>You have no bookings yet.</p>
+        <p>No bookings found.</p>
       ) : (
         bookings.map((booking) => (
           <div
@@ -50,15 +50,15 @@ function BookingsPage() {
               background: '#f9f9f9'
             }}
           >
-            <h3>Booking: {booking.ResID}</h3>
-            <p><strong>Room:</strong>{booking.RoomID}</p>
-            <p><strong>Check-in:</strong> {booking.StartDate}</p>
-            <p><strong>Check-out:</strong> {booking.EndDate}</p>
-            <p><strong>Guests:</strong> {booking.NumberOfGuests}</p>
-            <p><strong>Status:</strong> {booking.Status}</p>
-
-            <p><strong>Check-in time:</strong>{booking.CheckeinTime || 'N/A'}</p>
-            <p><strong>Check-out time:</strong>{booking.CheckeoutTime || 'N/A'}</p>
+            <h3>Reservation ID: {booking.ResID}</h3>
+            <p>Guest ID: {booking.GuestID}</p>
+            <p>Room ID: {booking.RoomID}</p>
+            <p>Start date: {booking.StartDate}</p>
+            <p>End date: {booking.EndDate}</p>
+            <p>Check-in time: {booking.CheckInTime || 'N/A'}</p>
+            <p>Check-out time: {booking.CheckOutTime || 'N/A'}</p>
+            <p>Number of guests: {booking.NumberOfGuests}</p>
+            <p>Status: {booking.Status}</p>
           </div>
         ))
       )}
@@ -66,4 +66,4 @@ function BookingsPage() {
   );
 }
 
-export default BookingsPage;
+export default AdminBookingsPage;
