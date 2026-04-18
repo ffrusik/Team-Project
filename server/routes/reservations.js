@@ -42,21 +42,7 @@ const requireAdmin = (req, res, next) => {
 };
 
 // GET all reservations
-router.get("/admin/reservations", authenticateToken, requireAdmin, async (req, res) => {
-  try {
-    let reservations;
-    if (GuestID){
-      reservations = await allQuery (
-        "SELECT * FROM Reservation WHERE GuestID = ?",[GuestID]
-      );
-    } else{
-      reservations = await allQuery("SELECT * FROM Reservation")
-    }
-    res.json(reservations);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+
 
 router.get("/reservations", authenticateToken, async (req, res) => {
   try {
