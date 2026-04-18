@@ -49,7 +49,11 @@ router.post("/", async (req, res) => {
       EndDate,
       NumberOfGuests,
       CheckInTime,
-      CheckOutTime
+      CheckOutTime,
+      CardholderName,
+      CardLast4Digits,
+      ExpiryDate
+
     } = req.body;
 
     const today = new Date().toISOString().split("T")[0];
@@ -73,6 +77,9 @@ router.post("/", async (req, res) => {
 
     console.log(capacity.Capacity)
     console.log(NumberOfGuests)
+    if(!capacity){
+      return res.status(404).json({error:"This room cannt accomodate that many guests"})
+    }
 
     if (NumberOfGuests > capacity.Capacity) {
       return res.status(400).json({ error: "Number of guests exceeds room capacity" });
@@ -110,8 +117,8 @@ router.post("/", async (req, res) => {
 
     const result = await runQuery(
       `INSERT INTO Reservation
-      (GuestID, RoomID, StartDate, EndDate, CheckInTime, CheckOutTime, NumberOfGuests, Status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      (GuestID, RoomID, StartDate, EndDate, CheckInTime, CheckOutTime, NumberOfGuests, Status,CardholderName, CardLast4Digits,ExpiryDate)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?,?,?,?)`,
       [
         GuestID,
         RoomID,
@@ -120,7 +127,10 @@ router.post("/", async (req, res) => {
         CheckInTime || null,
         CheckOutTime || null,
         NumberOfGuests,
-        "Pending"
+        "Pending",
+        CardholderName,
+        CardLast4Digits,
+        ExpiryDate
       ]
     );
 

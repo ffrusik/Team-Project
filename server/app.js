@@ -83,11 +83,29 @@ db.run(`ALTER TABLE Room ADD COLUMN Facilities TEXT`, (err) => {
     CheckOutTime TEXT,
     NumberOfGuests INTEGER,
     Status TEXT DEFAULT 'Pending',
+    CardholderName TEXT,
+    CardLast4Digits TEXT,
+    ExpiryDate TEXT,
     FOREIGN KEY (GuestID) REFERENCES Guest(GuestID),
     FOREIGN KEY (RoomID) REFERENCES Room(RoomID)
   )
   `)
   db.run(`ALTER TABLE Reservation ADD COLUMN Status TEXT DEFAULT 'Pending'`, (err) => {
+  if (err && !err.message.includes("duplicate column name")) {
+    console.error(err.message)
+  }
+})
+db.run(`ALTER TABLE Reservation ADD COLUMN CardholderName TEXT`, (err) => {
+  if (err && !err.message.includes("duplicate column name")) {
+    console.error(err.message)
+  }
+})
+db.run(`ALTER TABLE Reservation ADD COLUMN CardLast4Digits TEXT`, (err) => {
+  if (err && !err.message.includes("duplicate column name")) {
+    console.error(err.message)
+  }
+})
+db.run(`ALTER TABLE Reservation ADD COLUMN ExpiryDate TEXT`, (err) => {
   if (err && !err.message.includes("duplicate column name")) {
     console.error(err.message)
   }

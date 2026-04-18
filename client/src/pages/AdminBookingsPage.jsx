@@ -59,6 +59,9 @@ function AdminBookingsPage() {
             <p>Check-out time: {booking.CheckOutTime || 'N/A'}</p>
             <p>Number of guests: {booking.NumberOfGuests}</p>
             <p>Status: {booking.Status}</p>
+            <p>Cardholder name:{booking.CardholderName || 'N/A'}</p>
+            <p>Card ending in: {booking.CardLast4Digits || 'N/A'}</p>
+            <p>Expiry date: {booking.ExpiryDate || 'N/A'}</p>
           </div>
         ))
       )}

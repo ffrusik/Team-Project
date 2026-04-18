@@ -12,9 +12,7 @@ function BookRoomPage() {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-        /* const token = localStorage.getItem('token');
-        const res = await fetch(`/api/rooms/${id}`, {
-          headers: token ? { 'Authorization': `Bearer ${token}` } : {} */
+       
           const res = await fetch(`http://localhost:5000/api/rooms/${id}`);
       
 
@@ -24,7 +22,7 @@ function BookRoomPage() {
         }
 
         const data = await res.json();
-        setRoom(data);  // single object, not array
+        setRoom(data);  
       } catch (err) {
         setError(err.message);
       } finally {
@@ -39,10 +37,7 @@ function BookRoomPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    /* const token = localStorage.getItem('token');
-    if (!token) {
-      alert('Please log in to book a room');
-      return; */
+    
   
 
     const today = new Date().toISOString().split("T")[0];
@@ -59,7 +54,26 @@ function BookRoomPage() {
     alert("End date must be after start date");
     return;
   }
-    
+  const expiry = e.target.expiryDate.value;
+  const match = expiry.match(/^(0[1-9]|1[0-2])\/([0-9]{2})$/);
+  if(!match){
+    alert("Invalid expiry date format (MM/YY)");
+    return
+  }
+  const month = parseInt(match[1]);
+  const year = parseInt("20" + match[2]);
+  const now = new Date();
+  const currentMonth = now.getMonth() + 1;
+  const currentYear = now.getFullYear();
+  
+  if(year < currentYear || (year === currentYear && month < currentMonth)){
+    alert("Card has expired");
+    return;
+  }
+    const cardholderName = e.target.cardholderName.value;
+    const cardNumber = e.target.cardNumber.value;
+    const expiryDate = e.target.expiryDate.value;
+    const cardLast4Digits = cardNumber.slice(-4);
 
     const formDataObj = {
     GuestID: Number(e.target.guestId.value),
@@ -67,6 +81,10 @@ function BookRoomPage() {
     StartDate: e.target.startDate.value,
     EndDate: e.target.endDate.value,
     NumberOfGuests: Number(e.target.numberOfGuests.value),
+    CardholderName: cardholderName,
+    CardLast4Digits : cardLast4Digits,
+    ExpiryDate: expiryDate
+
   };
 
     try {
@@ -82,7 +100,7 @@ function BookRoomPage() {
       const result = await response.json()
 
       if (!response.ok) {
-        alert(result.error) // show backend error
+        alert(result.error) 
         return
       }
       
@@ -117,6 +135,7 @@ function BookRoomPage() {
           id='numberOfGuestsInput' 
           name='numberOfGuests'
           min="1"
+          max={room?.Capacity || 1}
           required
         /><br/>
 
@@ -141,12 +160,46 @@ function BookRoomPage() {
 
       <div>
         <p>Card details</p>
+        <label htmlFor='cardholderNameInput'>Cardholder name: </label>
+        <input
+          type='text'
+          id='cardholderNameInput'
+          name='cardholderName'
+          required
+        /><br />
+
         <label htmlFor='cardNumberInput'>Card number: </label>
-        <input type='text' id='cardNumberInput' name='cardNumber'></input><br></br>
-        <label htmlFor='dateOfExpiryInput'>Date of expiry: </label>
-        <input type='text' id='dateOfExpiryInput' name='dateOfExpiry'></input><br></br>
+        <input
+          type='text'
+          id='cardNumberInput'
+          name='cardNumber'
+          inputMode='numeric'
+          pattern='[0-9]{16}'
+          maxLength='16'
+          required
+        /><br />
+
+        <label htmlFor='expiryDateInput'>Expiry date: </label>
+        <input
+          type='text'
+          id='expiryDateInput'
+          name='expiryDate'
+          placeholder = 'MM/YY'
+          pattern = '^(0[1-9]|1[0-2])\/[0-9]{2})$'
+          maxLength = '5'
+          required
+        /><br />
+
         <label htmlFor='cvcInput'>CVC: </label>
-        <input type='password' id='cvcInput' name='cvc'></input><br></br>
+        <input
+          type='password'
+          id='cvcInput'
+          name='cvc'
+          inputMode='numeric'
+          pattern='[0-9]{3}'
+          maxLength='3'
+          required
+        /><br />
       </div>
 
 
