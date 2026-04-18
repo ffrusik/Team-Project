@@ -62,3 +62,6 @@ coverage/
 # OS / misc
 *.bak
 *.orig
+
+
+database.db
