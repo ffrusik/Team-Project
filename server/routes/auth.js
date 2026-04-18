@@ -18,7 +18,8 @@ if (!JWT_SECRET) {
 // Register
 router.post('/register', async (req, res) => {
   const { 
-    guestName, 
+    firstName,
+    lastName, 
     email, 
     password, 
     phoneNumber, 
@@ -28,17 +29,19 @@ router.post('/register', async (req, res) => {
   } = req.body
 
   // Required fields validation
-  if (!email || !password || !phoneNumber || !eirCode) {
+  if (!email || !password || !phoneNumber || !eirCode || !firstName || !lastName) {
     return res.status(400).json({ 
-      error: 'Email, password, phoneNumber, and eirCode are required' 
+      error: 'Email, password, phoneNumber, eirCode, firstName, and lastName are required' 
     })
   }
 
   try {
-    const existing = await runQuery(
+    console.log('Registering user:', { email, firstName, lastName, phoneNumber, town, county, eirCode })
+    const existing = await getQuery(
         `SELECT * FROM Guest WHERE Email = ?`,
         [email]
       );
+
     if (existing) {
       return res.status(409).json({ error: 'Email already exists' })
     }
@@ -60,7 +63,7 @@ router.post('/register', async (req, res) => {
         `INSERT INTO Guest
          (FirstName, LastName, Email, Password, Phone, Eircode, Role)
          VALUES (?, ?, ?, ?, ?, ?, ?)`,
-        [FirstName, LastName, Email, hashedPassword, Phone, Eircode, 'USER']
+        [firstName, lastName, email, hashedPassword, phoneNumber, eirCode, 'USER']
       );
 
     const token = jwt.sign(

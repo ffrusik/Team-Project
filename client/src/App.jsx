@@ -7,6 +7,7 @@ import BookingsPage from "./pages/BookingsPage.jsx";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import DashboardRoomsPage from "./pages/DashboardRoomsPage.jsx";
 import DashboardGuestsPage from "./pages/DashboardGuestsPage";
+import DashboardBookingsPage from "./pages/DashboardBookingsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
 import AddExtra from "./pages/AddExtra.jsx";
@@ -76,6 +77,7 @@ function App() {
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/dashboard/rooms" element={<DashboardRoomsPage />} />
           <Route path="/admin/dashboard/guests" element={<DashboardGuestsPage />} />
+          <Route path="/admin/dashboard/bookings" element={<DashboardBookingsPage />} />
           <Route path="/admin/dashboard/extras" element={<AddExtra />} />
 
         </Route>
