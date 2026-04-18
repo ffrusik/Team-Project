@@ -12,9 +12,10 @@ function BookRoomPage() {
   useEffect(() => {
     const fetchRoom = async () => {
       try {
-       
-          const res = await fetch(`http://localhost:5000/api/rooms/${id}`);
-      
+        const token = localStorage.getItem('token');
+        const res = await fetch(`/api/rooms/${id}`, {
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+        });
 
         if (!res.ok) {
           const err = await res.json();
@@ -37,8 +38,11 @@ function BookRoomPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    
-  
+    const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Please log in to book a room');
+      return;
+    }
 
     const today = new Date().toISOString().split("T")[0];
 
@@ -76,7 +80,6 @@ function BookRoomPage() {
     const cardLast4Digits = cardNumber.slice(-4);
 
     const formDataObj = {
-    GuestID: Number(e.target.guestId.value),
     RoomID: Number(id),
     StartDate: e.target.startDate.value,
     EndDate: e.target.endDate.value,
@@ -88,11 +91,12 @@ function BookRoomPage() {
   };
 
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch('http://localhost:5000/api/reservations', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
-          
+          'Content-Type': 'application/json',
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
         body: JSON.stringify(formDataObj)
       })
@@ -120,15 +124,14 @@ function BookRoomPage() {
       <h1>Book Room </h1>
       <form onSubmit={handleSubmit}>
       <div>
-        <p>Booking details</p>
-        <label htmlFor='guestIdInput'>Guest ID: </label>
+        {/* <label htmlFor='guestIdInput'>Guest ID: </label>
         <input
           type='number'
           id='guestIdInput'
           name='guestId'
           min='1'
           required
-        /><br/>
+        /><br/> */}
         <label htmlFor='numberOfGuestsInput'>Number of guests: </label>
         <input 
           type='number' 

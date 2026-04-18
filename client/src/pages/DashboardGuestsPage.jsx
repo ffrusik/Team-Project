@@ -22,7 +22,10 @@ function DashboardGuestsPage() {
 
   const fetchGuests = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/guests");
+      const token = localStorage.getItem('token');
+      const res = await fetch("http://localhost:5000/api/guests", {
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+      });
 
       if (!res.ok) {
         const err = await res.json();
@@ -55,10 +58,12 @@ function DashboardGuestsPage() {
         ? `http://localhost:5000/api/guests/${editingGuest.GuestID}`
         : "http://localhost:5000/api/guests";
 
+      const token = localStorage.getItem('token');
       const res = await fetch(url, {
         method,
         headers: {
           "Content-Type": "application/json",
+          ...(token ? { 'Authorization': `Bearer ${token}` } : {})
         },
         body: JSON.stringify(formData),
       });
@@ -103,8 +108,10 @@ function DashboardGuestsPage() {
     if (!window.confirm("Delete this guest? This cannot be undone.")) return;
 
     try {
+      const token = localStorage.getItem('token');
       const res = await fetch(`http://localhost:5000/api/guests/${guestId}`, {
         method: "DELETE",
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {}
       });
 
       const data = await res.json();

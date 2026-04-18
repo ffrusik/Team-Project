@@ -8,7 +8,10 @@ function BookingsPage() {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/reservations?GuestID=2');//will only return bookings for guest 1 or 2( temp till login is completed)
+        const token = localStorage.getItem('token');
+        const res = await fetch('http://localhost:5000/api/reservations', {
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+        });
 
         const data = await res.json();
 

@@ -1,4 +1,5 @@
 import dotenv from 'dotenv'
+import bcrypt from 'bcryptjs'
 dotenv.config()
 
 import express from 'express'
@@ -9,6 +10,7 @@ import db from './db.js'
 import guestRoutes from './routes/guests.js'
 import roomRoutes from "./routes/rooms.js";
 import reservationRoutes from "./routes/reservations.js";
+import authRoutes from "./routes/auth.js";
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -22,15 +24,15 @@ app.use((req, res, next) => {
     next()
 })
 
-//app.use('/api', apiRouter) 
-app.use('/api/guests', guestRoutes)
-app.use("/api/rooms", roomRoutes);
-app.use("/api/reservations", reservationRoutes);
+app.use('/api/auth', authRoutes)
+app.use('/api/', guestRoutes)  // guests
+app.use("/api/", roomRoutes);  // rooms
+app.use("/api/", reservationRoutes);  // reservations
 
 
   //tables
   // create project tables -- needs to be updated so table is not created every single time node app.js is ran
-db.serialize(() => {
+db.serialize(async () => {
 
   db.run(`
   CREATE TABLE IF NOT EXISTS Guest (
@@ -40,7 +42,8 @@ db.serialize(() => {
     Email TEXT,
     Password TEXT,
     Phone TEXT,
-    Eircode TEXT
+    Eircode TEXT,
+    Role TEXT
   )
   `)
 
@@ -131,6 +134,16 @@ db.run(`ALTER TABLE Reservation ADD COLUMN ExpiryDate TEXT`, (err) => {
     FOREIGN KEY (ExtraTypeID) REFERENCES ExtraType(ExtraTypeID)
   )
   `)
+
+  const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD, 10)
+
+  db.run(`
+  INSERT INTO Guest (FirstName, LastName, Email, Password, Phone, Eircode, Role)
+  SELECT ?, ?, ?, ?, ?, ?, ?
+  WHERE NOT EXISTS (
+    SELECT 1 FROM Guest WHERE Email = ?
+  )
+`, ['Admin', 'Admin', 'admin@email.com', hashedPassword, '1234567890', 'F92U8WT', 'ADMIN', 'admin@email.com']);
 
 })
 //})
