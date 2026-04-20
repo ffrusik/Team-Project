@@ -28,12 +28,15 @@ function App() {
   
       <nav className="navbar">
         <div className="nav-left">
-          <Link to="/rooms" className="logo">
+          <Link to={user?.role === "ADMIN" ? "/admin/dashboard" : "/rooms"} className="logo">
             Le Hotel
           </Link>
-
-          <Link to="/rooms">Rooms</Link>
-          <Link to="/bookings">Bookings</Link>
+          {user?.role !== "ADMIN" && (
+            <>
+            <Link to="/rooms">Rooms</Link>
+            <Link to="/bookings">Bookings</Link>
+            </>
+          )}
           <Link to="/admin/dashboard">Admin</Link>
         </div>
 

@@ -23,7 +23,12 @@ function LoginPage() {
 
       login(data.token, data.user) // update context and storage
 
+      if(data.user.role ==="ADMIN"){
+        return navigate('/admin/dashboard')
+      }
       navigate('/rooms')
+      
+      
     } catch (err) {
       setError(err.message)
     }
