@@ -153,6 +153,93 @@ function DashboardBookingsPage() {
     });
   };
 
+  const handleCheckIn = async (resId) => {
+    try {
+      const currentRoom = rooms.find((room) => room.ResID === resId);
+
+      if (!currentRoom) {
+        alert("Reservation not found");
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `http://localhost:5000/api/admin/reservations/${resId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            GuestID: currentRoom.GuestID,
+            RoomID: currentRoom.RoomID,
+            StartDate: currentRoom.StartDate,
+            EndDate: currentRoom.EndDate,
+            CheckInTime: new Date().toLocaleTimeString(),
+            CheckOutTime: currentRoom.CheckOutTime || "",
+            NumberOfGuests: Number(currentRoom.NumberOfGuests),
+            Status: "Checked In",
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to check in guest");
+      }
+
+      await fetchRooms();
+      alert("Guest checked in successfully");
+    } catch (err) {
+      alert("Error: " + err.message);
+    }
+  };
+
+  const handleCheckOut = async (resId) => {
+    try {
+      const currentRoom = rooms.find((room) => room.ResID === resId);
+
+      if (!currentRoom) {
+        alert("Reservation not found");
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `http://localhost:5000/api/admin/reservations/${resId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            GuestID: currentRoom.GuestID,
+            RoomID: currentRoom.RoomID,
+            StartDate: currentRoom.StartDate,
+            EndDate: currentRoom.EndDate,
+            CheckInTime: currentRoom.CheckInTime || "",
+            CheckOutTime: new Date().toLocaleTimeString(),
+            NumberOfGuests: Number(currentRoom.NumberOfGuests),
+            Status: "Checked Out",
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to check out guest");
+      }
+
+      await fetchRooms();
+      alert("Guest checked out successfully");
+    } catch (err) {
+      alert("Error: " + err.message);
+    }
+  };
   if (loading) {
     return (
       <div style={{ padding: "50px", textAlign: "center" }}>
@@ -332,6 +419,8 @@ function DashboardBookingsPage() {
                 <td>{room.RoomID}</td>
                 <td>{room.StartDate}</td>
                 <td>{room.EndDate}</td>
+                <td>{room.CheckInTime || "N/A"} </td>
+                <td>{room.CheckOutTime || "N/A"}</td>
                 <td>{room.Status}</td>
                 <td>
                   <button className="edit-btn" onClick={() => handleEdit(room)}>
@@ -343,6 +432,16 @@ function DashboardBookingsPage() {
                   >
                     Delete
                   </button>
+
+                  {room.Status !== "Checked In" && room.Status !== "Checked Out" && (
+                    <button onClick={() => handleCheckIn(room.ResID)}
+                    style={{ marginLeft: "10px"}}> Chcek In</button>
+                  )}
+
+                  {room.Status === "Checked In" && ( 
+                    <button onClick={() => handleCheckOut(room.ResID)}
+                    style={{marginleft: "10px"}}>Check Out</button> 
+                  )}
                 </td>
               </tr>
             ))
