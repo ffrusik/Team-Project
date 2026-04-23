@@ -19,7 +19,7 @@ function AdminBookingsPage() {
         const data = await res.json();
 
         if (!res.ok) {
-          throw new Error(data.error || 'Failed to load bookings');
+          throw new Error(data.error || "Failed to load bookings");
         }
 
         setBookings(data || []);
@@ -38,20 +38,21 @@ function AdminBookingsPage() {
     try{
       const token = localStorage.getItem("token");
       const res = await fetch(
-        `http://localhost:5000/api/reservations/${reservationId}/checkin`,
+        `http://localhost:5000/api/${reservationId}/checkin`,
         {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
-          }
+          },
         }
       );
       const data = await res.json();
       if(!res.ok){
         throw new Error(data.error || "Failed to check in guest");
       }
+      alert("Checked in successfully")
       fetchBookings();
-    }catch(err){
+    } catch(err){
       alert(err.message);
     }
   };
@@ -59,7 +60,7 @@ function AdminBookingsPage() {
     try{
       const token = localStorage.getItem("token");
       const res = await fetch(
-        `http://localhost:5000/api/reservations/${reservationId}/checkout`,
+        `http://localhost:5000/api/${reservationId}/checkout`,
         {
           method: "PUT",
           headers: {

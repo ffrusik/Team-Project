@@ -528,7 +528,7 @@ router.put("/:id/checkin", async (req, res) => {
     if (!reservation){
       return res.status(404).json({error: "Reservation not found"});
     }
-    const checkInTime = new Date(). totalLocaleTimeString([], {
+    const checkInTime = new Date(). toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit"
     });
