@@ -78,6 +78,48 @@ function AdminBookingsPage() {
       alert(err.message);
     }
   };
+  const handleConfirm = async (reservationId) =>{
+    try{
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:5000/api/${reservationId}/confirm`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Beare ${token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      if(!res.ok){
+        throw new Error(data.error || "Failed to confirm reservation");
+      }
+      alert("Reservation confirmed");
+      fetchBookings();
+    } catch(err){
+      alert(err.message);
+    }
+  };
+  const handleReject = async (reservationId) =>{
+    try{
+      const token = localStorage.getItem("token");
+      const res = await fetch(`http://localhost:5000/api/${reservationId}/reject`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const data = await res.json();
+      if(!res.ok){
+        throw new Error(data.error || "Failed to reject reservation");
+      }
+      alert("Reservation rejected");
+      fetchBookings();
+    } catch(err){
+      alert(err.message);
+    }
+  };
 
 
   if (loading) return <div>Loading all bookings...</div>;
@@ -113,7 +155,13 @@ function AdminBookingsPage() {
             <p>Status: {booking.Status}</p>
 
             <div style ={{marginTop: "10px"}}>
-              <button onClick={() => handleCheckIn(booking.ResID)} disabled ={booking.Status !== "Pending"}>
+              <button onClick={() => handleConfirm(booking.ResID)} disabled ={booking.Status !== "Pending"}>
+                Confirm
+              </button>
+               <button onClick={() => handleReject(booking.ResID)} disbaled={booking.Status !== "Pending"} style={{marginLeft:"10px"}}>
+                Reject
+              </button>
+               <button onClick={() => handleCheckIn(booking.ResID)} disbaled={booking.Status !== "Confirmed"} style={{marginLeft:"10px"}}>
                 Check In
               </button>
               <button onClick={() => handleCheckOut(booking.ResID)} disbaled={booking.Status !== "Checked In"} style={{marginLeft:"10px"}}>

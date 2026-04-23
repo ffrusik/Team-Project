@@ -474,7 +474,7 @@ router.delete("/reservations/:id", authenticateToken, async (req, res) => {
   }
 });
 
-// CONFIRM reservation
+/* // CONFIRM reservation
 router.put("/reservations/:id/confirm", async (req, res) => {
   try {
     const reservation = await getQuery(
@@ -518,7 +518,7 @@ router.put("/reservations/:id/reject", authenticateToken, async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
-});
+}); */
 router.put("/:id/checkin", async (req, res) => {
   try{
     const reservation = await getQuery(
@@ -561,6 +561,36 @@ router.put("/:id/checkout", async (req, res)=>{
     res.json({message: "Geust checked out"});
   }catch(error){
     res.status(500).json({error:error.message});
+  }
+});
+router.put("/:id/confirm", authenticateToken, requireAdmin, async (req, res) => {
+  try{
+    const reservation = await getQuery("SELECT * FROM Reservation WHERE ResID =?",[req.params.id]);
+    if(!reservation){
+      return res.status(404).json({error: "Reservation not found"});
+    }
+    if(reservation.Status !== "Pending"){
+      return res.Status(400).json({error:"Reservation not found"});
+    }
+    await runQuery("UPDATE Reservation SET Status = ? WHERE ResID =?",["Confirmed", req.params.id] );
+    res.json({ message: "Reservation confirmed"});
+  }catch(error){
+    res.status(500).json({error: error.message});
+  }
+});
+router.put("/:id/reject", authenticateToken, requireAdmin, async(req, res)=>{
+  try{
+    const reservation = await getQuery("SELECT * FROM Reservation WHERE ResID = ?",[req.params.id]);
+    if(!reservation){
+      return res.status(404).json({error: "Reservation not found"});
+    }
+    if(reservation.Status !== "Pending"){
+      return res.status(400).json({error: "Only pending reservations can be rejected"});
+    }
+    await runQuery("UPDATE Reservation SET Status = ? WHERE ResID =?",["Rejected, req.params.id"]);
+    res.json({message: "Reservation rejected"});
+  } catch(error){
+    res.status(500).json({error: error.message});
   }
 });
 export default router;
