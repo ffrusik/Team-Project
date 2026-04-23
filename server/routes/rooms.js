@@ -44,8 +44,28 @@ const requireAdmin = (req, res, next) => {
 
 // GET all rooms
 router.get("/rooms/", async (req, res) => {
-  const rooms = await allQuery("SELECT * FROM Room");
-  res.json(rooms);
+  try{
+    const{ StartDate, EndDate, guests} = req.query;
+    let rooms;
+    if(StartDate && EndDate){
+      rooms = await allQuery(
+        `SELECT * FROM Room
+        WHERE Capacity >= ?
+        AND RoomID NOT IN(
+          SELECT ROOMID FROM Reservation
+          WHERE Status != 'Rejected'
+          AND NOT (EndDate <= ? OR StartDate >= ?))`,
+        [guests || 1, EndDate, StartDate]
+      )
+    }else{
+       rooms = await allQuery("SELECT * FROM Room");
+
+    }
+    res.json(rooms);
+  } catch(error){
+    res.status(500).json({error: error.message});
+  }
+  
 });
 
 
