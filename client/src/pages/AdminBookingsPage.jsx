@@ -5,10 +5,16 @@ function AdminBookingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  
     const fetchBookings = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/reservations');
+        const token = localStorage.getItem("token");
+        const res = await fetch('http://localhost:5000/api/admin/reservations',{
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        });
+      
 
         const data = await res.json();
 
@@ -24,9 +30,54 @@ function AdminBookingsPage() {
         setLoading(false);
       }
     };
-
-    fetchBookings();
+    useEffect(() => {
+      fetchBookings();
   }, []);
+
+  const handleCheckIn = async(reservationId) =>{
+    try{
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `http://localhost:5000/api/reservations/${reservationId}/checkin`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+      const data = await res.json();
+      if(!res.ok){
+        throw new Error(data.error || "Failed to check in guest");
+      }
+      fetchBookings();
+    }catch(err){
+      alert(err.message);
+    }
+  };
+  const handleCheckOut = async(reservationId) => {
+    try{
+      const token = localStorage.getItem("token");
+      const res = await fetch(
+        `http://localhost:5000/api/reservations/${reservationId}/checkout`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+      const data = await res.json();
+
+      if(!res.ok){
+        throw new Error(data.error || "Failed to check out guest");
+      }
+      fetchBookings();
+    }catch(err){
+      alert(err.message);
+    }
+  };
+
 
   if (loading) return <div>Loading all bookings...</div>;
 
@@ -59,9 +110,15 @@ function AdminBookingsPage() {
             <p>Check-out time: {booking.CheckOutTime || 'N/A'}</p>
             <p>Number of guests: {booking.NumberOfGuests}</p>
             <p>Status: {booking.Status}</p>
-            <p>Cardholder name:{booking.CardholderName || 'N/A'}</p>
-            <p>Card ending in: {booking.CardLast4Digits || 'N/A'}</p>
-            <p>Expiry date: {booking.ExpiryDate || 'N/A'}</p>
+
+            <div style ={{marginTop: "10px"}}>
+              <button onClick={() => handleCheckIn(booking.ResID)} disabled ={booking.Status !== "Pending"}>
+                Check In
+              </button>
+              <button onClick={() => handleCheckOut(booking.ResID)} disbaled={booking.Status !== "Checked In"} style={{marginLeft:"10px"}}>
+                Check Out
+              </button>
+            </div>
           </div>
         ))
       )}

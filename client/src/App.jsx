@@ -82,7 +82,7 @@ function App() {
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/dashboard/rooms" element={<DashboardRoomsPage />} />
           <Route path="/admin/dashboard/guests" element={<DashboardGuestsPage />} />
-          <Route path="/admin/dashboard/bookings" element={<DashboardBookingsPage />} />
+          <Route path="/admin/dashboard/bookings/manage" element={<DashboardBookingsPage />} />
           <Route path="/admin/dashboard/extras" element={<AddExtra />} />
           <Route path="/admin/dashboard/bookings" element={<AdminBookingsPage />} />
 

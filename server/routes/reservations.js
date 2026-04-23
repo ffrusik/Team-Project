@@ -519,5 +519,48 @@ router.put("/reservations/:id/reject", authenticateToken, async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
+router.put("/:id/checkin", async (req, res) => {
+  try{
+    const reservation = await getQuery(
+      "SELECT * FROM Reservation WHERE ResID = ?",
+      [req.params.id]
+    );
+    if (!reservation){
+      return res.status(404).json({error: "Reservation not found"});
+    }
+    const checkInTime = new Date(). totalLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+    await runQuery(
+      "UPDATE Reservation SET CheckInTime = ?, Status = ? WHERE ResID =?",
+      [checkInTime, "Checked In", req.params.id]
+    );
+    res.json({message: "Guest checked in"});
+  } catch( error){
+    res.status(500).json({ error: error.message});
+  }
+});
+router.put("/:id/checkout", async (req, res)=>{
+  try{
+    const reservation = await getQuery(
+      "SELECT * FROM Reservation WHERE ResID = ?",
+      [req.params.id]
+    );
+    if(!reservation){
+      return res.status(404).json({error: "Reservation not found"});
+    }
+    const checkOutTime = new Date().toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+    await runQuery(
+      "UPDATE Reservation SET CheckOutTime =?, Status = ? Where ResID = ?",
+      [checkOutTime, "Checked Out", req.params.id]
+    );
+    res.json({message: "Geust checked out"});
+  }catch(error){
+    res.status(500).json({error:error.message});
+  }
+});
 export default router;

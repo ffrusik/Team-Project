@@ -23,9 +23,13 @@ function DashboardPage() {
           Manage Guests
         </Link>
 
+        <Link to="/admin/dashboard/bookings/manage" className="dashboard-action-card">
+          Manage Bookings
+        </Link>
         <Link to="/admin/dashboard/bookings" className="dashboard-action-card">
           View Bookings
         </Link>
+        
 
         <Link to="/admin/dashboard/extras" className="dashboard-action-card">
           Manage Extras
