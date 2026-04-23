@@ -31,7 +31,7 @@ app.use('/api/', guestRoutes)  // guests
 app.use("/api/", roomRoutes);  // rooms
 app.use("/api/", reservationRoutes);  // reservations
 app.use("/api", extraTypesRoutes); //extra type
-app.use("/api", extraRoutes);
+app.use("/api", extrasRoutes);
 
 
   //tables
