@@ -11,6 +11,8 @@ import guestRoutes from './routes/guests.js'
 import roomRoutes from "./routes/rooms.js";
 import reservationRoutes from "./routes/reservations.js";
 import authRoutes from "./routes/auth.js";
+import extraTypesRoutes from "./routes/extraTypes.js";
+import extrasRoutes from "./routes/extras.js";
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -28,6 +30,8 @@ app.use('/api/auth', authRoutes)
 app.use('/api/', guestRoutes)  // guests
 app.use("/api/", roomRoutes);  // rooms
 app.use("/api/", reservationRoutes);  // reservations
+app.use("/api", extraTypesRoutes); //extra type
+app.use("/api", extrasRoutes);
 
 
   //tables

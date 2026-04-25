@@ -11,7 +11,7 @@ import DashboardGuestsPage from "./pages/DashboardGuestsPage";
 import DashboardBookingsPage from "./pages/DashboardBookingsPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import RegisterPage from "./pages/RegisterPage.jsx";
-import AddExtra from "./pages/AddExtra.jsx";
+import DashboardExtrasPage from "./pages/DashboardExtraPage.jsx";
 //import DashboardReservationsPage from "./pages/DashboardReseravtionsPage.jsx";
 import "./App.css"
 
@@ -82,8 +82,13 @@ function App() {
           <Route path="/admin/dashboard" element={<DashboardPage />} />
           <Route path="/admin/dashboard/rooms" element={<DashboardRoomsPage />} />
           <Route path="/admin/dashboard/guests" element={<DashboardGuestsPage />} />
+<<<<<<< HEAD
           <Route path="/admin/dashboard/bookings/manage" element={<DashboardBookingsPage />} />
           <Route path="/admin/dashboard/extras" element={<AddExtra />} />
+=======
+          <Route path="/admin/dashboard/bookings" element={<DashboardBookingsPage />} />
+          <Route path="/admin/dashboard/extras" element={<DashboardExtrasPage />} />
+>>>>>>> ExtraRoute
           <Route path="/admin/dashboard/bookings" element={<AdminBookingsPage />} />
 
         </Route>

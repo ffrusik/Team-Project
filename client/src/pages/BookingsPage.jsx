@@ -60,8 +60,8 @@ function BookingsPage() {
             <p><strong>Guests:</strong> {booking.NumberOfGuests}</p>
             <p><strong>Status:</strong> {booking.Status}</p>
 
-            <p><strong>Check-in time:</strong>{booking.CheckeinTime || 'N/A'}</p>
-            <p><strong>Check-out time:</strong>{booking.CheckeoutTime || 'N/A'}</p>
+            <p><strong>Check-in time:</strong>{booking.CheckinTime || 'N/A'}</p>
+            <p><strong>Check-out time:</strong>{booking.CheckoutTime || 'N/A'}</p>
           </div>
         ))
       )}
